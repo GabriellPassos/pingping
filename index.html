@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Leitura do Giroscópio</title>
+</head>
+<body>
+  <h1>Valores do Giroscópio</h1>
+  <p>Alpha (Z - Rotação): <span id="alpha">Aguardando...</span></p>
+  <p>Beta (X - Inclinação frente/trás): <span id="beta">Aguardando...</span></p>
+  <p>Gamma (Y - Inclinação lateral): <span id="gamma">Aguardando...</span></p>
+
+  <script>
+    if (window.DeviceOrientationEvent) {
+      window.addEventListener("deviceorientation", function(event) {
+        document.getElementById("alpha").textContent = event.alpha.toFixed(2);
+        document.getElementById("beta").textContent = event.beta.toFixed(2);
+        document.getElementById("gamma").textContent = event.gamma.toFixed(2);
+      }, true);
+    } else {
+      document.body.innerHTML += "<p>Seu navegador não suporta o evento DeviceOrientation.</p>";
+    }
+  </script>
+</body>
+</html>
