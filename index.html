@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <title>Leitura do Giroscópio</title>
 </head>
+
 <body>
   <h1>Valores do Giroscópio</h1>
   <p>Alpha (Z - Rotação): <span id="alpha">Aguardando...</span></p>
@@ -10,8 +12,28 @@
   <p>Gamma (Y - Inclinação lateral): <span id="gamma">Aguardando...</span></p>
 
   <script>
+
+    let tempo = 0; // Tempo total acumulado (em segundos)
+    let ultimoFrame = performance.now(); // Marca o tempo do último frame
+
+    
+    //PROCESS
+    function loop() {
+      //CALCULO TEMPO
+      const agora = performance.now();
+      const delta = (agora - ultimoFrame) / 1000; // Tempo entre frames, em segundos
+
+      tempo += delta; // Incrementa o tempo acumulado
+
+      console.log(`Tempo: ${tempo.toFixed(2)}s`);
+
+      ultimoFrame = agora;
+      requestAnimationFrame(loop); // Próximo frame
+    }
+
+    requestAnimationFrame(loop);
     if (window.DeviceOrientationEvent) {
-      window.addEventListener("deviceorientation", function(event) {
+      window.addEventListener("deviceorientation", function (event) {
         document.getElementById("alpha").textContent = event.alpha.toFixed(2);
         document.getElementById("beta").textContent = event.beta.toFixed(2);
         document.getElementById("gamma").textContent = event.gamma.toFixed(2);
@@ -19,6 +41,36 @@
     } else {
       document.body.innerHTML += "<p>Seu navegador não suporta o evento DeviceOrientation.</p>";
     }
+
+    //FISICA
+
+    function calcularPercursoMovimentoLinearVertical(F, m, deltaT, g = 9.8) {
+      // Cálculo da velocidade inicial
+      const v0 = (F / m) * deltaT;
+
+      // Altura máxima
+      const hMax = (v0 ** 2) / (2 * g);
+
+      // Tempo total para voltar ao ponto 0
+      const tTotal = (2 * v0) / g;
+
+      // Retorno dos valores em um objeto
+      return {
+        velocidadeInicial: v0,
+        alturaMaxima: hMax,
+        tempoTotal: tTotal
+      };
+    }
+    function calcularForcaSimples(betaInicial, betaFinal, constante = 1) {
+      const deltaBeta = betaFinal - betaInicial;
+      const forcaCoef = Math.abs(deltaBeta) * constante;
+
+      return {
+        deltaBeta: deltaBeta,
+        forcaCoef: forcaCoef
+      };
+    }
   </script>
 </body>
+
 </html>
