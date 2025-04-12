@@ -12,11 +12,15 @@
   <p>Gamma (Y - Inclinação lateral): <span id="gamma">Aguardando...</span></p>
 
   <script>
-
+    let alpha;
+    let beta;
+    let gamma;
     let tempo = 0; // Tempo total acumulado (em segundos)
     let ultimoFrame = performance.now(); // Marca o tempo do último frame
-
-    
+    let inicio = false;
+    let tempoGatilhoRitmo = 2;
+    let betaInicialRitmo = 0;
+    let coeficienteForca = 1;
     //PROCESS
     function loop() {
       //CALCULO TEMPO
@@ -24,6 +28,20 @@
       const delta = (agora - ultimoFrame) / 1000; // Tempo entre frames, em segundos
 
       tempo += delta; // Incrementa o tempo acumulado
+      let tempoRitmoInterno = tempoRitmoInterno + delta;
+
+      if (start) {
+        if (tempoRitmoInterno >= tempoGatilhoRitmo) {
+
+          const impulso = calcularForcaSimples(betaInicialRitmo, beta, coeficienteForca);
+          console.log(impulso);
+          tempoRitmoInterno = 0;
+        }
+        if (betaInicialRitmo < beta) {
+          betaInicialRitmo = beta;
+        }
+
+      }
 
       console.log(`Tempo: ${tempo.toFixed(2)}s`);
 
@@ -37,6 +55,9 @@
         document.getElementById("alpha").textContent = event.alpha.toFixed(2);
         document.getElementById("beta").textContent = event.beta.toFixed(2);
         document.getElementById("gamma").textContent = event.gamma.toFixed(2);
+        alpha = event.alpha.toFixed(2);
+        beta = event.beta.toFixed(2);
+        gamma = event.gamma.toFixed(2);
       }, true);
     } else {
       document.body.innerHTML += "<p>Seu navegador não suporta o evento DeviceOrientation.</p>";
