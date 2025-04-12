@@ -38,19 +38,20 @@
       tempoRitmoInterno = tempoRitmoInterno + delta;
 
       if (start) {
-        let antigoBeta = beta;
+        let betaAtual = beta;
         console.log(tempoRitmoInterno)
         //MOMENTO QUE O JOGADOR IMPULSIONA
         if (tempoRitmoInterno >= tempoGatilhoRitmo) {
           console.log(`TempoRitmoInterno: ${tempoRitmoInterno}s`);
-          const impulso = calcularForcaSimples(betaInicialRitmo, antigoBeta, multiplicadorForca);
-          console.log(`AntigoBeta: ${antigoBeta}`);
+          const impulso = calcularForcaSimples(betaInicialRitmo, betaAtual, multiplicadorForca);
+          console.log(`BetaAtual: ${betaAtual}`);
           console.log(`BetaInicialRitmo: ${betaInicialRitmo}`);
           console.log('Impulso:', impulso);
           calcularAcerto(impulso.forcaCoef)
 
           const trajetoria = calcularPercursoMovimentoLinearVertical(impulso, 1, 1)
           tempoGatilhoRitmo = trajetoria.tempoTotal;
+          betaInicialRitmo = betaAtual;
           tempoRitmoInterno = 0;
         }
         if (betaInicialRitmo > beta) {
