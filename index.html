@@ -21,8 +21,12 @@
     let tempoRitmoInterno = 0;
     let tempoGatilhoRitmo = 2;
     let betaInicialRitmo = -20;
-    let coeficienteForca = 1;
+    let multiplicadorForca = 1;
     let start = true;
+
+    let minimoForcaAcerto = 10;
+    let minimoAnguloAcerto = 10;
+    let maximoAnguloAcerto = 10;
     //PROCESS
     function loop() {
       //CALCULO TEMPO
@@ -36,19 +40,23 @@
       if (start) {
         let antigoBeta = beta;
         console.log(tempoRitmoInterno)
+        //MOMENTO QUE O JOGADOR IMPULSIONA
         if (tempoRitmoInterno >= tempoGatilhoRitmo) {
           console.log(`TempoRitmoInterno: ${tempoRitmoInterno}s`);
-          const impulso = calcularForcaSimples(betaInicialRitmo, antigoBeta, coeficienteForca);
+          const impulso = calcularForcaSimples(betaInicialRitmo, antigoBeta, multiplicadorForca);
           console.log(`AntigoBeta: ${antigoBeta}`);
           console.log(`BetaInicialRitmo: ${betaInicialRitmo}`);
           console.log('Impulso:', impulso);
+          calcularAcerto(impulso.forcaCoef)
 
+          const trajetoria = calcularPercursoMovimentoLinearVertical(impulso, 1, 1)
+          tempoGatilhoRitmo = trajetoria.tempoTotal;
           tempoRitmoInterno = 0;
         }
         if (betaInicialRitmo > beta) {
           betaInicialRitmo = beta;
         }
-
+        
       }
 
       //console.log(`Tempo: ${tempo.toFixed(2)}s`);
@@ -98,6 +106,12 @@
         deltaBeta: deltaBeta,
         forcaCoef: forcaCoef
       };
+    }
+    function calcularAcerto(forcaCoef) {
+      if (forcaCoef >= minimoForcaAcerto) {
+        console.log('ACERTEI')
+      }
+
     }
   </script>
 </body>
