@@ -18,6 +18,7 @@
     let tempo = 0; // Tempo total acumulado (em segundos)
     let ultimoFrame = performance.now(); // Marca o tempo do último frame
     let inicio = false;
+    let tempoRitmoInterno
     let tempoGatilhoRitmo = 2;
     let betaInicialRitmo = -20;
     let coeficienteForca = 1;
@@ -29,7 +30,7 @@
       const delta = (agora - ultimoFrame) / 1000; // Tempo entre frames, em segundos
 
       tempo += delta; // Incrementa o tempo acumulado
-      let tempoRitmoInterno
+
       tempoRitmoInterno = tempoRitmoInterno + delta;
 
       if (start) {
