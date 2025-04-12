@@ -19,8 +19,9 @@
     let ultimoFrame = performance.now(); // Marca o tempo do último frame
     let inicio = false;
     let tempoGatilhoRitmo = 2;
-    let betaInicialRitmo = 0;
+    let betaInicialRitmo = -20;
     let coeficienteForca = 1;
+    let start = true;
     //PROCESS
     function loop() {
       //CALCULO TEMPO
@@ -31,10 +32,14 @@
       let tempoRitmoInterno = tempoRitmoInterno + delta;
 
       if (start) {
+        let antigoBeta = beta;
         if (tempoRitmoInterno >= tempoGatilhoRitmo) {
+          console.log(`TempoRitmoInterno: ${tempoRitmoInterno.toFixed(2)}s`);
+          const impulso = calcularForcaSimples(betaInicialRitmo, antigoBeta, coeficienteForca);
+          console.log(`AntigoBeta: ${antigoBeta}`);
+          console.log(`BetaInicialRitmo: ${betaInicialRitmo}`);
+          console.log('Impulso:', impulso);
 
-          const impulso = calcularForcaSimples(betaInicialRitmo, beta, coeficienteForca);
-          console.log(impulso);
           tempoRitmoInterno = 0;
         }
         if (betaInicialRitmo < beta) {
@@ -43,7 +48,7 @@
 
       }
 
-      console.log(`Tempo: ${tempo.toFixed(2)}s`);
+      //console.log(`Tempo: ${tempo.toFixed(2)}s`);
 
       ultimoFrame = agora;
       requestAnimationFrame(loop); // Próximo frame
