@@ -10,7 +10,7 @@
   <p>Alpha (Z - Rotação): <span id="alpha">Aguardando...</span></p>
   <p>Beta (X - Inclinação frente/trás): <span id="beta">Aguardando...</span></p>
   <p>Gamma (Y - Inclinação lateral): <span id="gamma">Aguardando...</span></p>
-
+  <div id="efeito-acerto" class="efeito-default" style="height: 20px; width: 80px;"></div>
   <script>
     let alpha;
     let beta;
@@ -27,6 +27,9 @@
     let minimoForcaAcerto = 10;
     let minimoAnguloAcerto = 10;
     let maximoAnguloAcerto = 10;
+
+    const div = document.querySelector('#efeito-acerto')
+    
     //PROCESS
     function loop() {
       //CALCULO TEMPO
@@ -40,23 +43,33 @@
       if (start) {
         let betaAtual = beta;
         console.log(tempoRitmoInterno)
+        
         //MOMENTO QUE O JOGADOR IMPULSIONA
+        const impulso = calcularForcaSimples(betaInicialRitmo, betaAtual, multiplicadorForca);
+        if (betaInicialRitmo > beta) {
+          betaInicialRitmo = beta;
+        }
+        
+        div.classList.add('.efeito-default')
         if (tempoRitmoInterno >= tempoGatilhoRitmo) {
+          
+          if(impulso.forcaCoef > minimoForcaAcerto){
+            //ACERTOU
+            div.classList.add('.efeito-acerto')
+          }
           console.log(`TempoRitmoInterno: ${tempoRitmoInterno}s`);
-          const impulso = calcularForcaSimples(betaInicialRitmo, betaAtual, multiplicadorForca);
+
           console.log(`BetaAtual: ${betaAtual}`);
           console.log(`BetaInicialRitmo: ${betaInicialRitmo}`);
           console.log('Impulso:', impulso);
-          calcularAcerto(impulso.forcaCoef)
+          
 
           const trajetoria = calcularPercursoMovimentoLinearVertical(impulso, 1, 1)
           tempoGatilhoRitmo = trajetoria.tempoTotal;
           betaInicialRitmo = betaAtual;
           tempoRitmoInterno = 0;
         }
-        if (betaInicialRitmo > beta) {
-          betaInicialRitmo = beta;
-        }
+
         
       }
 
@@ -108,13 +121,16 @@
         forcaCoef: forcaCoef
       };
     }
-    function calcularAcerto(forcaCoef) {
-      if (forcaCoef >= minimoForcaAcerto) {
-        console.log('ACERTEI')
-      }
 
-    }
   </script>
+  <style>
+  .efeito-acerto{
+    background-color: green;
+  }
+  .efeito-default{
+    background-color: red;
+  }
+  </style>
 </body>
 
 </html>
