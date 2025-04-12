@@ -35,6 +35,7 @@
 
       if (start) {
         let antigoBeta = beta;
+        console.log(tempoRitmoInterno)
         if (tempoRitmoInterno >= tempoGatilhoRitmo) {
           console.log(`TempoRitmoInterno: ${tempoRitmoInterno}s`);
           const impulso = calcularForcaSimples(betaInicialRitmo, antigoBeta, coeficienteForca);
