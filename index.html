@@ -21,7 +21,7 @@
     let tempoRitmoInterno = 0;
     let tempoGatilhoRitmo = 2;
     let betaInicialRitmo = -20;
-    let multiplicadorForca = .2;
+    let multiplicadorForca = 1;
     let start = true;
 
     let minimoForcaAcerto = 10;
@@ -46,7 +46,7 @@
         div.classList.add('.efeito-default')
 
         //MOMENTO QUE O JOGADOR IMPULSIONA
-        const impulso = calcularForcaSimples(betaInicialRitmo, betaAtual, multiplicadorForca);
+        const impulso = calcularForcaSimples(betaInicialRitmo, betaAtual);
         if (betaInicialRitmo > beta) {
           betaInicialRitmo = beta;
         }
