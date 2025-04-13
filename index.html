@@ -21,7 +21,7 @@
     let tempoRitmoInterno = 0;
     let tempoGatilhoRitmo = 2;
     let betaInicialRitmo = -20;
-    let multiplicadorForca = 1;
+    let multiplicadorForca = .2;
     let start = true;
 
     let minimoForcaAcerto = 10;
@@ -69,7 +69,7 @@
           console.log(`BetaAtual: ${betaAtual}`);
           console.log(`BetaInicialRitmo: ${betaInicialRitmo}`);
           console.log('Impulso:', impulso);
-          const trajetoria = calcularPercursoMovimentoLinearVertical(impulso.forcaCoef, 1, 1)
+          const trajetoria = calcularPercursoMovimentoLinearVertical(impulso.forcaCoef * multiplicadorForca, 1, 1)
           console.log('Trajetoria:', trajetoria);
           tempoGatilhoRitmo = trajetoria.tempoTotal;
           betaInicialRitmo = betaAtual;
