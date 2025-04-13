@@ -29,7 +29,7 @@
     let maximoAnguloAcerto = 10;
 
     const div = document.querySelector('#efeito-acerto')
-    
+
     //PROCESS
     function loop() {
       //CALCULO TEMPO
@@ -43,34 +43,38 @@
       if (start) {
         let betaAtual = beta;
         console.log(tempoRitmoInterno)
-        
+        div.classList.add('.efeito-default')
+
         //MOMENTO QUE O JOGADOR IMPULSIONA
         const impulso = calcularForcaSimples(betaInicialRitmo, betaAtual, multiplicadorForca);
         if (betaInicialRitmo > beta) {
           betaInicialRitmo = beta;
         }
-        
-        div.classList.add('.efeito-default')
-        if (tempoRitmoInterno >= tempoGatilhoRitmo) {
-          
-          if(impulso.forcaCoef > minimoForcaAcerto){
-            //ACERTOU
-            div.classList.add('.efeito-acerto')
+        if (impulso.forcaCoef > minimoForcaAcerto) {
+          //ACERTOU
+
+          switch (tempoRitmoInterno) {
+            case tempoGatilhoRitmo:
+              div.classList.add('.efeito-acerto-perfeito')
+              break;
+            case tempoGatilhoRitmo + .5:
+              div.classList.add('.efeito-acerto-medio')
+              break;
+            case tempoGatilhoRitmo + 1:
+              div.classList.add('.efeito-acerto-fraco')
+              break;
           }
           console.log(`TempoRitmoInterno: ${tempoRitmoInterno}s`);
 
           console.log(`BetaAtual: ${betaAtual}`);
           console.log(`BetaInicialRitmo: ${betaInicialRitmo}`);
           console.log('Impulso:', impulso);
-          
-
-          const trajetoria = calcularPercursoMovimentoLinearVertical(impulso, 1, 1)
+          const trajetoria = calcularPercursoMovimentoLinearVertical(impulso.forcaCoef, 1, 1)
+          console.log('Trajetoria:', trajetoria);
           tempoGatilhoRitmo = trajetoria.tempoTotal;
           betaInicialRitmo = betaAtual;
           tempoRitmoInterno = 0;
         }
-
-        
       }
 
       //console.log(`Tempo: ${tempo.toFixed(2)}s`);
@@ -124,12 +128,21 @@
 
   </script>
   <style>
-  .efeito-acerto{
-    background-color: green;
-  }
-  .efeito-default{
-    background-color: red;
-  }
+    .efeito-acerto-perfeito {
+      background-color: green;
+    }
+
+    .efeito-acerto-medio {
+      background-color: yellow;
+    }
+
+    .efeito-acerto-fraco {
+      background-color: blue;
+    }
+
+    .efeito-default {
+      background-color: red;
+    }
   </style>
 </body>
 
