@@ -1,153 +1,175 @@
 <!DOCTYPE html>
 <html>
-
-<head>
-  <title>Leitura do Giroscópio</title>
-  <style>
-    .efeito-acerto-perfeito {
-      background-color: green;
-    }
-
-    .efeito-acerto-medio {
-      background-color: yellow;
-    }
-
-    .efeito-acerto-fraco {
-      background-color: blue;
-    }
-
-    .efeito-default {
-      background-color: red;
-    }
-  </style>
-</head>
-
-<body>
-  <h1>Valores do Giroscópio</h1>
-  <p>Alpha (Z - Rotação): <span id="alpha">Aguardando...</span></p>
-  <p>Beta (X - Inclinação frente/trás): <span id="beta">Aguardando...</span></p>
-  <p>Gamma (Y - Inclinação lateral): <span id="gamma">Aguardando...</span></p>
-  <div id="efeito-acerto" class="efeito-default" style="height: 20px; width: 80px;"></div>
-  <p>Contador: <span id="contador-ritmo">Aguardando...</span></p>
-  <p id="mensagem"></p>
-
-  <script>
-    let alpha, beta, gamma;
-    let tempo = 0;
-    let ultimoFrame = performance.now();
-    let tempoRitmoInterno = 0;
-    let tempoGatilhoRitmo = 2;
-    let betaInicialRitmo = -20;
-    let multiplicadorForca = 1;
-    let start = true;
-
-    const minimoForcaAcerto = 10;
-    const div = document.querySelector('#efeito-acerto');
-
-    function calcularForcaSimples(betaInicial, betaFinal, constante = 1) {
-      const deltaBeta = betaFinal - betaInicial;
-      const forcaCoef = Math.abs(deltaBeta) * constante;
-      return { deltaBeta, forcaCoef };
-    }
-
-    function calcularPercursoMovimentoLinearVertical(F, m, deltaT, g = 9.8) {
-      const v0 = (F / m) * deltaT;
-      const hMax = (v0 ** 2) / (2 * g);
-      const tTotal = (2 * v0) / g;
-      return { velocidadeInicial: v0, alturaMaxima: hMax, tempoTotal: tTotal };
-    }
-
-    function resetarClasseVisual() {
-      div.className = 'efeito-default';
-    }
-
-    function aplicarClasseVisual(classe) {
-      resetarClasseVisual();
-      div.classList.add(classe);
-    }
-    function resetParametros() {
-      document.getElementById("mensagem").textContent = `FiM DE JOGO`;
-      start = false
-      betaInicialRitmo = 0;
-      tempoGatilhoRitmo = 2;
-      setTimeout(() => start = true, 5000);
-    }
-    function tentarAcertar(betaAtual) {
-      const impulso = calcularForcaSimples(betaInicialRitmo, betaAtual);
-      if (impulso.forcaCoef > minimoForcaAcerto) {
-        const trajetoria = calcularPercursoMovimentoLinearVertical(impulso.forcaCoef * multiplicadorForca, 1, 1);
-        tempoGatilhoRitmo = trajetoria.tempoTotal;
-        betaInicialRitmo = betaAtual;
-        tempoRitmoInterno = 0;
-
-        aplicarClasseVisual('efeito-acerto-perfeito');
-        console.log("✅ Acerto!");
-        console.log('Impulso:', impulso);
-        console.log('Trajetória:', trajetoria);
-        return {...impulso, ...trajetoria}
+  <head>
+    <title>Leitura do Giroscópio</title>
+    <style>
+      .efeito-acerto-perfeito {
+        background-color: green;
       }
-      return null
-    }
 
-    function loop() {
-      const agora = performance.now();
-      const delta = (agora - ultimoFrame) / 1000;
-      tempo += delta;
-      tempoRitmoInterno += delta;
+      .efeito-acerto-medio {
+        background-color: yellow;
+      }
 
-      // Atualiza o contador no HTML
-      const tempoRestante = Math.max(0, (tempoGatilhoRitmo - tempoRitmoInterno)).toFixed(2);
-      document.getElementById("contador-ritmo").textContent = `${tempoRestante}s`;
-      const betaAtual = beta;
-      if (betaInicialRitmo > beta) {
+      .efeito-acerto-fraco {
+        background-color: blue;
+      }
+
+      .efeito-default {
+        background-color: red;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>Valores do Giroscópio</h1>
+    <p>Alpha (Z - Rotação): <span id="alpha">Aguardando...</span></p>
+    <p>
+      Beta (X - Inclinação frente/trás): <span id="beta">Aguardando...</span>
+    </p>
+    <p>Gamma (Y - Inclinação lateral): <span id="gamma">Aguardando...</span></p>
+    <div
+      id="efeito-acerto"
+      class="efeito-default"
+      style="height: 20px; width: 80px"
+    ></div>
+    <p>Contador: <span id="contador-ritmo">Aguardando...</span></p>
+    <p id="mensagem"></p>
+
+    <script>
+      let alpha, beta, gamma;
+      let tempo = 0;
+      let ultimoFrame = performance.now();
+      let tempoRitmoInterno = 0;
+      let tempoGatilhoRitmo = 2;
+      let betaInicialRitmo = 0;
+      let multiplicadorForca = 1;
+      let start = true;
+
+      const minimoForcaAcerto = 10;
+      const div = document.querySelector("#efeito-acerto");
+
+      function calcularForcaSimples(betaInicial, betaFinal, constante = 1) {
+        const deltaBeta = betaFinal - betaInicial;
+        const forcaCoef = Math.abs(deltaBeta) * constante;
+        return { deltaBeta, forcaCoef };
+      }
+
+      function calcularPercursoMovimentoLinearVertical(F, m, deltaT, g = 9.8) {
+        const v0 = (F / m) * deltaT;
+        const hMax = v0 ** 2 / (2 * g);
+        const tTotal = (2 * v0) / g;
+        return {
+          velocidadeInicial: v0,
+          alturaMaxima: hMax,
+          tempoTotal: tTotal,
+        };
+      }
+
+      function resetarClasseVisual() {
+        div.className = "efeito-default";
+      }
+
+      function aplicarClasseVisual(classe) {
+        resetarClasseVisual();
+        div.classList.add(classe);
+      }
+      function resetParametros() {
+        document.getElementById("mensagem").textContent = `FiM DE JOGO`;
+        betaInicialRitmo = 0;
+        tempoGatilhoRitmo = 2;
+      }
+      function tentarAcertar(betaAtual) {
+        const impulso = calcularForcaSimples(betaInicialRitmo, betaAtual);
+        if (impulso.forcaCoef > minimoForcaAcerto) {
+          const trajetoria = calcularPercursoMovimentoLinearVertical(
+            impulso.forcaCoef * multiplicadorForca,
+            1,
+            1
+          );
+          tempoGatilhoRitmo = trajetoria.tempoTotal;
+          betaInicialRitmo = betaAtual;
+          tempoRitmoInterno = 0;
+
+          aplicarClasseVisual("efeito-acerto-perfeito");
+          console.log("✅ Acerto!");
+          console.log("Impulso:", impulso);
+          console.log("Trajetória:", trajetoria);
+          return { ...impulso, ...trajetoria };
+        }
+        return null;
+      }
+
+      function loop() {
+        const agora = performance.now();
+        const delta = (agora - ultimoFrame) / 1000;
+        tempo += delta;
+        tempoRitmoInterno += delta;
+
+        // Atualiza o contador no HTML
+        const tempoRestante = Math.max(
+          0,
+          tempoGatilhoRitmo - tempoRitmoInterno
+        ).toFixed(2);
+        document.getElementById(
+          "contador-ritmo"
+        ).textContent = `${tempoRestante}s`;
+        const betaAtual = beta;
+        if (betaInicialRitmo > beta) {
           betaInicialRitmo = beta;
         }
-      if(!start){
-        if(tentarAcertar(betaAtual)){
-          start = true
-        }
-      }
-      if (start && typeof beta !== 'undefined') {
-        document.getElementById("mensagem").textContent = `ACERTE NO TEMPO!`;
-        if (Math.abs(tempoRitmoInterno - tempoGatilhoRitmo) < 0.1) {
-          tentarAcertar(betaAtual);
-          aplicarClasseVisual('efeito-acerto-perfeito')
-        } else if (Math.abs(tempoRitmoInterno - tempoGatilhoRitmo) < 0.3) {
-          tentarAcertar(betaAtual);
-          aplicarClasseVisual('efeito-acerto-medio')
-        } if (Math.abs(tempoRitmoInterno - tempoGatilhoRitmo) < 0.5) {
-          tentarAcertar(betaAtual);
-          aplicarClasseVisual('efeito-acerto-fraco')
-        } else if (tempoRitmoInterno > tempoGatilhoRitmo) {
-          //ERRO
-          resetParametros()
-          resetarClasseVisual()
+
+        if (start && typeof beta !== "undefined") {
+          document.getElementById("mensagem").textContent = `ACERTE NO TEMPO!`;
+          if (Math.abs(tempoRitmoInterno - tempoGatilhoRitmo) < 0.1) {
+            tentarAcertar(betaAtual);
+            aplicarClasseVisual("efeito-acerto-perfeito");
+          } else if (Math.abs(tempoRitmoInterno - tempoGatilhoRitmo) < 0.3) {
+            tentarAcertar(betaAtual);
+            aplicarClasseVisual("efeito-acerto-medio");
+          }
+          if (Math.abs(tempoRitmoInterno - tempoGatilhoRitmo) < 0.5) {
+            tentarAcertar(betaAtual);
+            aplicarClasseVisual("efeito-acerto-fraco");
+          } else if (tempoRitmoInterno > tempoGatilhoRitmo) {
+            //ERRO
+            resetParametros();
+            resetarClasseVisual();
+            if (tentarAcertar(betaAtual)) {
+              start = true;
+            }
+          }
+
+          console.log(`🕒 Tempo Interno: ${tempoRitmoInterno.toFixed(2)}s`);
+          console.log(`Beta Atual: ${betaAtual}`);
+          console.log(`Beta Inicial: ${betaInicialRitmo}`);
         }
 
-        console.log(`🕒 Tempo Interno: ${tempoRitmoInterno.toFixed(2)}s`);
-        console.log(`Beta Atual: ${betaAtual}`);
-        console.log(`Beta Inicial: ${betaInicialRitmo}`);
+        ultimoFrame = agora;
+        requestAnimationFrame(loop);
       }
 
-      ultimoFrame = agora;
       requestAnimationFrame(loop);
-    }
 
-    requestAnimationFrame(loop);
-
-    if (window.DeviceOrientationEvent) {
-      window.addEventListener("deviceorientation", function (event) {
-        document.getElementById("alpha").textContent = event.alpha.toFixed(2);
-        document.getElementById("beta").textContent = event.beta.toFixed(2);
-        document.getElementById("gamma").textContent = event.gamma.toFixed(2);
-        alpha = event.alpha.toFixed(2);
-        beta = event.beta.toFixed(2);
-        gamma = event.gamma.toFixed(2);
-      }, true);
-    } else {
-      document.body.innerHTML += "<p>Seu navegador não suporta o evento DeviceOrientation.</p>";
-    }
-  </script>
-</body>
-
+      if (window.DeviceOrientationEvent) {
+        window.addEventListener(
+          "deviceorientation",
+          function (event) {
+            document.getElementById("alpha").textContent =
+              event.alpha.toFixed(2);
+            document.getElementById("beta").textContent = event.beta.toFixed(2);
+            document.getElementById("gamma").textContent =
+              event.gamma.toFixed(2);
+            alpha = event.alpha.toFixed(2);
+            beta = event.beta.toFixed(2);
+            gamma = event.gamma.toFixed(2);
+          },
+          true
+        );
+      } else {
+        document.body.innerHTML +=
+          "<p>Seu navegador não suporta o evento DeviceOrientation.</p>";
+      }
+    </script>
+  </body>
 </html>
