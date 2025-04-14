@@ -4,35 +4,25 @@
     <title>Leitura do Giroscópio</title>
     <style>
       .efeito-acerto-perfeito {
-        background-color: green!important;
+        background-color: green !important;
       }
-
       .efeito-acerto-medio {
-        background-color: yellow!important;
+        background-color: yellow !important;
       }
-
       .efeito-acerto-fraco {
-        background-color: blue!important;
+        background-color: blue !important;
       }
-
       .efeito-default {
         background-color: red;
       }
     </style>
   </head>
-
   <body>
     <h1>Valores do Giroscópio</h1>
     <p>Alpha (Z - Rotação): <span id="alpha">Aguardando...</span></p>
-    <p>
-      Beta (X - Inclinação frente/trás): <span id="beta">Aguardando...</span>
-    </p>
+    <p>Beta (X - Inclinação frente/trás): <span id="beta">Aguardando...</span></p>
     <p>Gamma (Y - Inclinação lateral): <span id="gamma">Aguardando...</span></p>
-    <div
-      id="efeito-acerto"
-      class="efeito-default"
-      style="height: 20px; width: 80px"
-    ></div>
+    <div id="efeito-acerto" class="efeito-default" style="height: 20px; width: 80px"></div>
     <p>Contador: <span id="contador-ritmo">Aguardando...</span></p>
     <p id="mensagem"></p>
 
@@ -74,12 +64,15 @@
         resetarClasseVisual();
         div.classList.add(classe);
       }
+
       function resetParametros() {
-        document.getElementById("mensagem").textContent = `FiM DE JOGO`;
+        document.getElementById("mensagem").textContent = `FIM DE JOGO`;
         betaInicialRitmo = 0;
         tempoGatilhoRitmo = 2;
         start = false;
+        tempoRitmoInterno = 0;
       }
+
       function tentarAcertar(betaAtual) {
         const impulso = calcularForcaSimples(betaInicialRitmo, betaAtual);
         if (impulso.forcaCoef > minimoForcaAcerto) {
@@ -91,12 +84,9 @@
           tempoGatilhoRitmo = trajetoria.tempoTotal;
           betaInicialRitmo = betaAtual;
           tempoRitmoInterno = 0;
-
-          aplicarClasseVisual("efeito-acerto-perfeito");
           console.log("✅ Acerto!");
           console.log("Impulso:", impulso);
           console.log("Trajetória:", trajetoria);
-          console.log("Coeficiente Força:",impulso.forcaCoef )
           return { ...impulso, ...trajetoria };
         }
         return null;
@@ -108,38 +98,35 @@
         tempo += delta;
         tempoRitmoInterno += delta;
 
-        // Atualiza o contador no HTML
-        const tempoRestante = Math.max(
+        document.getElementById("contador-ritmo").textContent = `${Math.max(
           0,
           tempoGatilhoRitmo - tempoRitmoInterno
-        ).toFixed(2);
-        document.getElementById(
-          "contador-ritmo"
-        ).textContent = `${tempoRestante}s`;
+        ).toFixed(2)}s`;
+
         const betaAtual = beta;
-        if (betaInicialRitmo > beta) {
+
+        // DETECTAR NOVO MOVIMENTO PÓS-FALHA
+        if (!start && betaInicialRitmo > beta) {
           betaInicialRitmo = beta;
+          tempoRitmoInterno = 0;
+          start = true;
+          document.getElementById("mensagem").textContent = `NOVO CICLO INICIADO!`;
         }
 
         if (start && typeof beta !== "undefined") {
           document.getElementById("mensagem").textContent = `ACERTE NO TEMPO!`;
-          if (Math.abs(tempoRitmoInterno - tempoGatilhoRitmo) < 0.1) {
-            tentarAcertar(betaAtual);
-            aplicarClasseVisual("efeito-acerto-perfeito");
-          } else if (Math.abs(tempoRitmoInterno - tempoGatilhoRitmo) < 0.3) {
-            tentarAcertar(betaAtual);
-            aplicarClasseVisual("efeito-acerto-medio");
-          }
-          if (Math.abs(tempoRitmoInterno - tempoGatilhoRitmo) < 0.5) {
-            tentarAcertar(betaAtual);
-            aplicarClasseVisual("efeito-acerto-fraco");
+
+          const diffTempo = Math.abs(tempoRitmoInterno - tempoGatilhoRitmo);
+          if (diffTempo < 0.5) {
+            const resultado = tentarAcertar(betaAtual);
+            if (resultado) {
+              if (diffTempo < 0.1) aplicarClasseVisual("efeito-acerto-perfeito");
+              else if (diffTempo < 0.3) aplicarClasseVisual("efeito-acerto-medio");
+              else aplicarClasseVisual("efeito-acerto-fraco");
+            }
           } else if (tempoRitmoInterno > tempoGatilhoRitmo) {
-            //ERRO
             resetParametros();
             resetarClasseVisual();
-            if (tentarAcertar(betaAtual)) {
-              start = true;
-            }
           }
 
           console.log(`🕒 Tempo Interno: ${tempoRitmoInterno.toFixed(2)}s`);
@@ -157,11 +144,9 @@
         window.addEventListener(
           "deviceorientation",
           function (event) {
-            document.getElementById("alpha").textContent =
-              event.alpha.toFixed(2);
+            document.getElementById("alpha").textContent = event.alpha.toFixed(2);
             document.getElementById("beta").textContent = event.beta.toFixed(2);
-            document.getElementById("gamma").textContent =
-              event.gamma.toFixed(2);
+            document.getElementById("gamma").textContent = event.gamma.toFixed(2);
             alpha = event.alpha.toFixed(2);
             beta = event.beta.toFixed(2);
             gamma = event.gamma.toFixed(2);
@@ -169,8 +154,7 @@
           true
         );
       } else {
-        document.body.innerHTML +=
-          "<p>Seu navegador não suporta o evento DeviceOrientation.</p>";
+        document.body.innerHTML += "<p>Seu navegador não suporta o evento DeviceOrientation.</p>";
       }
     </script>
   </body>
