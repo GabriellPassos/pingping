@@ -117,11 +117,11 @@
           document.getElementById("mensagem").textContent = `ACERTE NO TEMPO!`;
 
           const diffTempo = Math.abs(tempoRitmoInterno - tempoGatilhoRitmo);
-          if (diffTempo < 0.5) {
+          if (diffTempo < 0.8) {
             const resultado = tentarAcertar(betaAtual);
             if (resultado) {
-              if (diffTempo < 0.1) aplicarClasseVisual("efeito-acerto-perfeito");
-              else if (diffTempo < 0.3) aplicarClasseVisual("efeito-acerto-medio");
+              if (diffTempo < 0.3) aplicarClasseVisual("efeito-acerto-perfeito");
+              else if (diffTempo < 0.5) aplicarClasseVisual("efeito-acerto-medio");
               else aplicarClasseVisual("efeito-acerto-fraco");
             }
           } else if (tempoRitmoInterno > tempoGatilhoRitmo) {
