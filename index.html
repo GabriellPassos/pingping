@@ -26,6 +26,7 @@
   <p>Beta (X - Inclinação frente/trás): <span id="beta">Aguardando...</span></p>
   <p>Gamma (Y - Inclinação lateral): <span id="gamma">Aguardando...</span></p>
   <div id="efeito-acerto" class="efeito-default" style="height: 20px; width: 80px;"></div>
+  <p>Contador: <span id="contador-ritmo">Aguardando...</span></p>
 
   <script>
     let alpha, beta, gamma;
@@ -82,6 +83,10 @@
       const delta = (agora - ultimoFrame) / 1000;
       tempo += delta;
       tempoRitmoInterno += delta;
+
+      // Atualiza o contador no HTML
+      const tempoRestante = Math.max(0, (tempoGatilhoRitmo - tempoRitmoInterno)).toFixed(2);
+      document.getElementById("contador-ritmo").textContent = `${tempoRestante}s`;
 
       if (start && typeof beta !== 'undefined') {
         const betaAtual = beta;
