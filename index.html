@@ -20,13 +20,21 @@
   <body>
     <h1>Valores do Giroscópio</h1>
     <p>Alpha (Z - Rotação): <span id="alpha">Aguardando...</span></p>
-    <p>Beta (X - Inclinação frente/trás): <span id="beta">Aguardando...</span></p>
+    <p>
+      Beta (X - Inclinação frente/trás): <span id="beta">Aguardando...</span>
+    </p>
     <p>Gamma (Y - Inclinação lateral): <span id="gamma">Aguardando...</span></p>
 
-    <div id="efeito-acerto" class="efeito-default" style="height: 20px; width: 80px;"></div>
+    <div
+      id="efeito-acerto"
+      class="efeito-default"
+      style="height: 20px; width: 80px"
+    ></div>
 
     <p>Contador: <span id="contador-ritmo">Aguardando...</span></p>
-    <p>Coeficiente de Força: <span id="coeficiente-forca">Aguardando...</span></p>
+    <p>
+      Coeficiente de Força: <span id="coeficiente-forca">Aguardando...</span>
+    </p>
     <p id="mensagem"></p>
 
     <script>
@@ -90,7 +98,9 @@
 
         document.getElementById("contador-ritmo").textContent = `${tempoInterno.toFixed(2)}s`;
         document.getElementById("mensagem").textContent = "ACERTE NO TEMPO!";
-
+        if (betaInicial > beta){
+          betaInicial = beta;
+        }
         if (tempoInterno > 0) {
           tempoInterno -= delta;
 
@@ -115,11 +125,9 @@
             tempoInterno = movimentoVertical.tempoTotal;
             betaInicial = beta;
             acertouNesteCiclo = false;
-          } else {
-            betaInicial = beta;
-          }
+          } 
+          betaInicial = beta;
         }
-
         ultimoFrame = agora;
         requestAnimationFrame(loop);
       }
