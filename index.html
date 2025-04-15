@@ -109,10 +109,10 @@
         
         
         document.getElementById("mensagem").textContent = `ACERTE NO TEMPO!`;
-        if (tempoInterno > 0) {
-          if (betaInicial > beta) {
+        if (betaInicial > beta) {
             betaInicial = beta;
           }
+        if (tempoInterno > 0) {
           if (tempoInterno < 0.8) {
             movimentoVertical = movimentoVerticalComBeta(
               betaInicial,
@@ -129,6 +129,7 @@
               }
               tempoInterno = movimentoVertical.tempoTotal;
             }
+            betaInicial = beta;
           }
           tempoInterno -= delta;
         } else {
