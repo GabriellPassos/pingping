@@ -85,7 +85,7 @@
         limiteAmplitudeBeta
       ) {
         const impulso = calcularForcaSimples(betaInicio, betaFim);
-        if (impulso.forcaCoef <= limiteAmplitudeBeta) {
+        if (impulso.forcaCoef >= limiteAmplitudeBeta) {
           const trajetoria = calcularPercursoMovimentoLinearVertical(
             impulso.forcaCoef * multiplicadorForca,
             1,
@@ -110,7 +110,6 @@
           if (betaInicial > beta) {
             betaInicial = beta;
           }
-          const diffTempo = tempoInterno;
 
           if (tempoInterno < 0.8) {
             movimentoVertical = movimentoVerticalComBeta(
