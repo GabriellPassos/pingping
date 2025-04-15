@@ -120,6 +120,7 @@
             }
           }
         } else {
+          document.getElementById("mensagem").textContent = `${betaInicial} ${beta} `;
           const movimentoVertical = movimentoVerticalComBeta(betaInicial, beta, minimoForcaAcerto);
           if (movimentoVertical) {
             tempoInterno = movimentoVertical.tempoTotal;
