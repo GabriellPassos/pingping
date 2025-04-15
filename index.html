@@ -30,6 +30,7 @@
       style="height: 20px; width: 80px"
     ></div>
     <p>Contador: <span id="contador-ritmo">Aguardando...</span></p>
+    <p>Coeficiente de Força: <span id="coeficiente-forca">Aguardando...</span></p>
     <p id="mensagem"></p>
 
     <script>
@@ -85,6 +86,7 @@
         limiteAmplitudeBeta
       ) {
         const impulso = calcularForcaSimples(betaInicio, betaFim);
+        document.getElementById("coeficiente-forca").textContent = impulso.forcaCoef;
         if (impulso.forcaCoef >= limiteAmplitudeBeta) {
           const trajetoria = calcularPercursoMovimentoLinearVertical(
             impulso.forcaCoef * multiplicadorForca,
@@ -104,13 +106,13 @@
         document.getElementById(
           "contador-ritmo"
         ).textContent = `${tempoInterno.toFixed(2)}s`;
-
+        
+        
         document.getElementById("mensagem").textContent = `ACERTE NO TEMPO!`;
         if (tempoInterno > 0) {
           if (betaInicial > beta) {
             betaInicial = beta;
           }
-
           if (tempoInterno < 0.8) {
             movimentoVertical = movimentoVerticalComBeta(
               betaInicial,
@@ -125,7 +127,7 @@
               } else if (tempoInterno < 0.8) {
                 aplicarClasseVisual("efeito-acerto-fraco");
               }
-              tempoZonaAcerto = movimentoVertical.tempoTotal;
+              tempoInterno = movimentoVertical.tempoTotal;
             }
           }
           tempoInterno -= delta;
