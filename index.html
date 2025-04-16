@@ -114,38 +114,35 @@
           }
           tempoInterno -= delta;
 
-          if (!acertouNesteCiclo) {
+          const movimentoVertical = movimentoVerticalComBeta(
+            betaInicial,
+            beta,
+            minimoForcaAcerto
+          );
+          if (movimentoVertical) {
+            if (tempoInterno < 0.3) {
+              aplicarClasseVisual("efeito-acerto-perfeito");
+            } else if (tempoInterno < 0.5) {
+              aplicarClasseVisual("efeito-acerto-medio");
+            } else if (tempoInterno < 0.8) {
+              aplicarClasseVisual("efeito-acerto-fraco");
+            }
+
+            tempoInterno = movimentoVertical.tempoTotal;
+          }
+        } else {
+          document.getElementById(
+            "mensagem"
+          ).textContent = `${betaInicial} ${beta} `;
+          if (betaInicial < 0) {
             const movimentoVertical = movimentoVerticalComBeta(
               betaInicial,
               beta,
               minimoForcaAcerto
             );
             if (movimentoVertical) {
-              if (tempoInterno < 0.3) {
-                aplicarClasseVisual("efeito-acerto-perfeito");
-              } else if (tempoInterno < 0.5) {
-                aplicarClasseVisual("efeito-acerto-medio");
-              } else if (tempoInterno < 0.8) {
-                aplicarClasseVisual("efeito-acerto-fraco");
-              }
-
               tempoInterno = movimentoVertical.tempoTotal;
-              acertouNesteCiclo = true;
             }
-          }
-        } else {
-          document.getElementById(
-            "mensagem"
-          ).textContent = `${betaInicial} ${beta} `;
-          const movimentoVertical = movimentoVerticalComBeta(
-            betaInicial,
-            beta,
-            minimoForcaAcerto
-          );
-          if (movimentoVertical && betaInicial < 0) {
-            tempoInterno = movimentoVertical.tempoTotal;
-            betaInicial = beta;
-            acertouNesteCiclo = false;
           }
         }
         ultimoFrame = agora;
