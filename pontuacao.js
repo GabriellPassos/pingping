@@ -53,7 +53,7 @@ export class Pontuacao {
         this.elMensagem.style.opacity = 1;
         setTimeout(() => {
           this.elMensagem.style.opacity = 0;
-        }, 800);
+        }, 100);
       }
     }
   
