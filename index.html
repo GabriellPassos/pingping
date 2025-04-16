@@ -121,13 +121,16 @@
           if (movimentoVertical) {
             if (tempoInterno < 0.3) {
               aplicarClasseVisual("efeito-acerto-perfeito");
+              tempoInterno = movimentoVertical.tempoTotal;
             } else if (tempoInterno < 0.5) {
               aplicarClasseVisual("efeito-acerto-medio");
+              tempoInterno = movimentoVertical.tempoTotal;
             } else if (tempoInterno < 0.8) {
               aplicarClasseVisual("efeito-acerto-fraco");
+              tempoInterno = movimentoVertical.tempoTotal;
             }
 
-            tempoInterno = movimentoVertical.tempoTotal;
+           
             betaInicial = beta;
           }
         } else {
