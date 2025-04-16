@@ -108,25 +108,28 @@
         ).textContent = `${tempoInterno.toFixed(2)}s`;
         document.getElementById("mensagem").textContent = "ACERTE NO TEMPO!";
         if (betaInicial > beta) {
-            betaInicial = beta;
-          }
+          betaInicial = beta;
+        }
         if (tempoInterno > 0) {
           tempoInterno -= delta;
-            const movimentoVertical = movimentoVerticalComBeta(
-              betaInicial,
-              beta,
-              minimoForcaAcerto
-            );
-            if (movimentoVertical) {
-              if (tempoInterno < 0.3) {
-                aplicarClasseVisual("efeito-acerto-perfeito");
-              } else if (tempoInterno < 0.5) {
-                aplicarClasseVisual("efeito-acerto-medio");
-              } else if (tempoInterno < 0.8) {
-                aplicarClasseVisual("efeito-acerto-fraco");
-              }
-              betaInicial = beta;
-              tempoInterno = movimentoVertical.tempoTotal;
+
+          const movimentoVertical = movimentoVerticalComBeta(
+            betaInicial,
+            beta,
+            minimoForcaAcerto
+          );
+          if (movimentoVertical) {
+            if (tempoInterno < 0.3) {
+              aplicarClasseVisual("efeito-acerto-perfeito");
+            } else if (tempoInterno < 0.5) {
+              aplicarClasseVisual("efeito-acerto-medio");
+            } else if (tempoInterno < 0.8) {
+              aplicarClasseVisual("efeito-acerto-fraco");
+            }
+
+            tempoInterno = movimentoVertical.tempoTotal;
+            betaInicial = beta;
+          }
         } else {
           document.getElementById(
             "mensagem"
@@ -139,6 +142,7 @@
             );
             if (movimentoVertical) {
               tempoInterno = movimentoVertical.tempoTotal;
+              betaInicial = beta;
             }
           }
         }
