@@ -68,7 +68,7 @@ function loop() {
     }
   } else {
     document.getElementById("mensagem").textContent = `TENTE NOVAMENTE!`;
-    sistemaPontuacao.registrarAcerto("miss");
+    pontuacao.registrarAcerto("miss");
     if (betaInicial < 0) {
       const movimentoVertical = giroscopio.movimentoVerticalComBeta(
         betaInicial,
