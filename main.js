@@ -2,7 +2,7 @@ import { Giroscopio } from "./giroscopio.js";
 import { Pontuacao } from "./pontuacao.js";
 const giroscopio = new Giroscopio();
 const pontuacao = new Pontuacao({
-  elementoMensagem: document.getElementById("mensagem"),
+  elementoMensagem: document.getElementById("mensagem-combo"),
   elementoPontuacao: document.getElementById("pontuacao"),
   elementoCombo: document.getElementById("combo"),
 });
