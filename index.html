@@ -107,11 +107,11 @@
           "contador-ritmo"
         ).textContent = `${tempoInterno.toFixed(2)}s`;
         document.getElementById("mensagem").textContent = "ACERTE NO TEMPO!";
-        if (betaInicial > beta) {
+
+        if (tempoInterno > 0) {
+          if (betaInicial > beta) {
             betaInicial = beta;
           }
-        if (tempoInterno > 0) {
-
           tempoInterno -= delta;
 
           if (!acertouNesteCiclo) {
@@ -142,7 +142,7 @@
             beta,
             minimoForcaAcerto
           );
-          if (movimentoVertical) {
+          if (movimentoVertical && betaInicial < 0) {
             tempoInterno = movimentoVertical.tempoTotal;
             betaInicial = beta;
             acertouNesteCiclo = false;
