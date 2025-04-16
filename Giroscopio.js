@@ -1,4 +1,4 @@
-import { Fisica } from "./Fisica.js";
+import { Fisica } from "./fisica.js";
 const fisica = new Fisica();
 export class Giroscopio{
     movimentoVerticalComBeta(
