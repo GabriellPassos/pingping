@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Three.js - Cena Básica</title>
+  <title>Three.js - Cena com Modelo GLB</title>
   <style>
     body { margin: 0; overflow: hidden; }
     canvas { display: block; }
@@ -12,6 +12,7 @@
 
 <script type="module">
   import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.157.0/build/three.module.js';
+  import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.157.0/examples/jsm/loaders/GLTFLoader.js';
 
   // Cena
   const scene = new THREE.Scene();
@@ -31,12 +32,6 @@
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
 
-  // Objeto centralizado (um cubo)
-  const geometry = new THREE.BoxGeometry(1, 1, 1);
-  const material = new THREE.MeshStandardMaterial({ color: 0xff6347 }); // cor tomate
-  const cube = new THREE.Mesh(geometry, material);
-  scene.add(cube);
-
   // Iluminação
   const ambientLight = new THREE.AmbientLight(0xffffff, 0.6); // Luz ambiente mais suave
   scene.add(ambientLight);
@@ -45,6 +40,18 @@
   directionalLight.position.set(5, 10, 7.5);
   scene.add(directionalLight);
 
+  // Loader do modelo
+  const loader = new GLTFLoader();
+  let model;
+
+  loader.load('./assets/pan_A.gltf', (gltf) => {
+    model = gltf.scene;
+    model.position.set(0, 0, 0); // Centraliza o modelo
+    scene.add(model);
+  }, undefined, (error) => {
+    console.error('Erro ao carregar o modelo:', error);
+  });
+
   // Responsivo ao redimensionar janela
   window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
@@ -52,12 +59,13 @@
     renderer.setSize(window.innerWidth, window.innerHeight);
   });
 
-  // Animação (opcional: girar o cubo)
+  // Animação
   function animate() {
     requestAnimationFrame(animate);
 
-    cube.rotation.x += 0.01;
-    cube.rotation.y += 0.01;
+    if (model) {
+      model.rotation.y += 0.01; // Gira o modelo
+    }
 
     renderer.render(scene, camera);
   }
