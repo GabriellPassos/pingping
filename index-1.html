@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Leitura do Giroscópio</title>
+    <style>
+      .efeito-acerto-perfeito {
+        background-color: green !important;
+      }
+      .efeito-acerto-medio {
+        background-color: blue !important;
+      }
+      .efeito-acerto-fraco {
+        background-color: yellow !important;
+      }
+      .efeito-default {
+        background-color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Valores do Giroscópio</h1>
+    <p>Alpha (Z - Rotação): <span id="alpha">Aguardando...</span></p>
+    <p>
+      Beta (X - Inclinação frente/trás): <span id="beta">Aguardando...</span>
+    </p>
+    <p>Gamma (Y - Inclinação lateral): <span id="gamma">Aguardando...</span></p>
+
+    <div
+      id="efeito-acerto"
+      class="efeito-default"
+      style="height: 20px; width: 80px"
+    ></div>
+
+    <p>Contador: <span id="contador-ritmo">Aguardando...</span></p>
+
+    <p id="pontuacao"></p>
+    <p id="combo"></p>
+    <p id="mensagem-combo"></p>
+    <p>
+      Coeficiente de Força: <span id="coeficiente-forca">Aguardando...</span>
+    </p>
+    <p id="mensagem"></p>
+
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>

@@ -1,46 +1,69 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>Leitura do Giroscópio</title>
-    <style>
-      .efeito-acerto-perfeito {
-        background-color: green !important;
-      }
-      .efeito-acerto-medio {
-        background-color: blue !important;
-      }
-      .efeito-acerto-fraco {
-        background-color: yellow !important;
-      }
-      .efeito-default {
-        background-color: red;
-      }
-    </style>
-  </head>
-  <body>
-    <h1>Valores do Giroscópio</h1>
-    <p>Alpha (Z - Rotação): <span id="alpha">Aguardando...</span></p>
-    <p>
-      Beta (X - Inclinação frente/trás): <span id="beta">Aguardando...</span>
-    </p>
-    <p>Gamma (Y - Inclinação lateral): <span id="gamma">Aguardando...</span></p>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Three.js - Cena Básica</title>
+  <style>
+    body { margin: 0; overflow: hidden; }
+    canvas { display: block; }
+  </style>
+</head>
+<body>
 
-    <div
-      id="efeito-acerto"
-      class="efeito-default"
-      style="height: 20px; width: 80px"
-    ></div>
+<script type="module">
+  import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.157.0/build/three.module.js';
 
-    <p>Contador: <span id="contador-ritmo">Aguardando...</span></p>
+  // Cena
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x87ceeb); // azul claro como o céu
 
-    <p id="pontuacao"></p>
-    <p id="combo"></p>
-    <p id="mensagem-combo"></p>
-    <p>
-      Coeficiente de Força: <span id="coeficiente-forca">Aguardando...</span>
-    </p>
-    <p id="mensagem"></p>
+  // Câmera
+  const camera = new THREE.PerspectiveCamera(
+    75, // campo de visão
+    window.innerWidth / window.innerHeight, // aspecto
+    0.1, // plano de corte próximo
+    1000 // plano de corte distante
+  );
+  camera.position.z = 5; // Afasta a câmera para poder ver o objeto
 
-    <script type="module" src="./main.js"></script>
-  </body>
+  // Renderizador
+  const renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  document.body.appendChild(renderer.domElement);
+
+  // Objeto centralizado (um cubo)
+  const geometry = new THREE.BoxGeometry(1, 1, 1);
+  const material = new THREE.MeshStandardMaterial({ color: 0xff6347 }); // cor tomate
+  const cube = new THREE.Mesh(geometry, material);
+  scene.add(cube);
+
+  // Iluminação
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.6); // Luz ambiente mais suave
+  scene.add(ambientLight);
+
+  const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8); // "Sol"
+  directionalLight.position.set(5, 10, 7.5);
+  scene.add(directionalLight);
+
+  // Responsivo ao redimensionar janela
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+
+  // Animação (opcional: girar o cubo)
+  function animate() {
+    requestAnimationFrame(animate);
+
+    cube.rotation.x += 0.01;
+    cube.rotation.y += 0.01;
+
+    renderer.render(scene, camera);
+  }
+
+  animate();
+</script>
+
+</body>
 </html>
