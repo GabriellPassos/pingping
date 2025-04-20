@@ -26,7 +26,7 @@ export class Cena_1 {
     // Carregar modelo
     const panela = await this.loader.carregarModelo(this.scene, "./assets/pan_A.gltf");
     this.modelos['panela'] = panela;
-
+    this.scene.add(panela);
     // (Opcional) Remover cubo depois de carregar o modelo
     this.scene.remove(this.cuboTemporario);
   }
