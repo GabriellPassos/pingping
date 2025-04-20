@@ -34,7 +34,7 @@ export class Cena_1 {
   update(beta) {
     // Atualizar animações e lógica da cena
     if (this.modelos['panela']) {
-      rotacionarModeloPorBeta(beta, this.modelos['panela'], new THREE.Vector2(0, 1));
+      rotacionarModeloPorBeta(beta, this.modelos['panela'], new THREE.Vector2(1, 0));
     }
 
     this.renderer.render(this.scene, this.camera);
