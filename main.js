@@ -33,6 +33,7 @@ function aplicarClasseVisual(classe) {
 // Setup do renderer
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setClearColor("#ffffff", 1); // Cor branca, opacidade 100%
 document.body.appendChild(renderer.domElement);
 
 // Instanciar a cena
