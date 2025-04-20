@@ -1,5 +1,7 @@
 import { Giroscopio } from "./giroscopio.js";
 import { Pontuacao } from "./pontuacao.js";
+import * as THREE from "three";
+import { Cena_1 } from "./cena_1.js";
 const giroscopio = new Giroscopio();
 const pontuacao = new Pontuacao({
   elementoMensagem: document.getElementById("mensagem-combo"),
@@ -28,12 +30,19 @@ function aplicarClasseVisual(classe) {
   resetarClasseVisual();
   div.classList.add(classe);
 }
+// Setup do renderer
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
+
+// Instanciar a cena
+const cenaAtual = new Cena_1(renderer);
 
 function loop() {
   const agora = performance.now();
   const delta = (agora - ultimoFrame) / 1000;
   tempo += delta;
-
+  cenaAtual.update(beta)
   document.getElementById(
     "contador-ritmo"
   ).textContent = `${tempoInterno.toFixed(2)}s`;
