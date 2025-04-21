@@ -65,7 +65,7 @@ export class Cena_1 {
     this.scene.add(panela);*/
     
     // Chamando a função
-    montarCenario();
+    //montarCenario();
     
   }
 
