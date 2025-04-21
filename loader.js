@@ -6,13 +6,13 @@ export class Loader {
     this.loader = new GLTFLoader();
   }
 
-  carregarModelo(cena, caminho) {
+  carregarModelo(cena,posicao, caminho) {
     return new Promise((resolve, reject) => {
       this.loader.load(
         caminho,
         (gltf) => {
           const modelo = gltf.scene;
-          modelo.position.set(0, 0, 0);
+          modelo.position.set(posicao);
           modelo.scale.set(1, 1, 1);
           cena.add(modelo);
           resolve(modelo); // <- quando terminar, retorna o modelo

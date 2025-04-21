@@ -16,3 +16,4 @@ export function rotacionarModeloPorBeta(beta, modelo, eixo) {
       modelo.rotation.y = betaEmRadianos * eixo.y;
     }
   }
+  

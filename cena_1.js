@@ -17,11 +17,11 @@ export class Cena_1 {
   }
   async  montarCenario() {
     // Carregar modelos
-    const fogao = await carregarModelo('./assets/oven.gltf');
-    const panela = await carregarModelo('./assets/pan_A.gltf');
-    const geladeira = await carregarModelo('./assets/fridge_A_decorated.gltf');
-    const prateleira = await carregarModelo('./assets/kitchentable_sink_large.gltf');
-    const personagem = await carregarModelo('./assets/Rogue.gltf');
+    const fogao = await carregarModelo(this.scene,'./assets/oven.gltf', (0, 0, 0));
+    const panela = await carregarModelo(this.scene,'./assets/pan_A.gltf',(0, 1, 0));
+    const geladeira = await carregarModelo(this.scene, './assets/fridge_A_decorated.gltf', (-3, 0, 2));
+    const prateleira = await carregarModelo(this.scene,'./assets/kitchentable_sink_large.gltf', (3, 1, 2));
+    const personagem = await carregarModelo(this.scene,'./assets/Rogue.gltf',(0, 0, -2));
   
     // ----------------------------
     // Posicionar os objetos
