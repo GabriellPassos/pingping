@@ -17,11 +17,11 @@ export class Cena_1 {
   }
   async  montarCenario() {
     // Carregar modelos
-    const fogao = await carregarModelo(this.scene,'./assets/oven.gltf');
-    const panela = await carregarModelo(this.scene,'./assets/pan_A.gltf');
-    const geladeira = await carregarModelo(this.scene, './assets/fridge_A_decorated.gltf');
-    const prateleira = await carregarModelo(this.scene,'./assets/kitchentable_sink_large.gltf');
-    const personagem = await carregarModelo(this.scene,'./assets/Rogue.gltf');
+    const fogao = await this.loader.carregarModelo(this.scene,'./assets/oven.gltf');
+    const panela = await this.loader.carregarModelo(this.scene,'./assets/pan_A.gltf');
+    const geladeira = await this.loader.carregarModelo(this.scene, './assets/fridge_A_decorated.gltf');
+    const prateleira = await this.loader.carregarModelo(this.scene,'./assets/kitchentable_sink_large.gltf');
+    const personagem = await this.loader.carregarModelo(this.scene,'./assets/Rogue.glb');
   
     // ----------------------------
     // Posicionar os objetos
@@ -29,25 +29,25 @@ export class Cena_1 {
   
     // Fogão
     fogao.position.set(0, 0, 0); // Centro da cena
-    scene.add(fogao);
+    this.scene.add(fogao);
   
     // Panela (em cima do fogão)
     panela.position.set(0, 1, 0); // 1 unidade acima
     panela.rotation.x = THREE.MathUtils.degToRad(30); // Inclinação inicial
-    scene.add(panela);
+    this.scene.add(panela);
   
     // Geladeira (à esquerda, mais para frente)
     geladeira.position.set(-3, 0, 2); // x negativo, z positivo
-    scene.add(geladeira);
+    this.scene.add(geladeira);
   
     // Prateleira (à direita, mais para frente)
     prateleira.position.set(3, 1, 2); // x positivo, z positivo, e um pouco mais alto
-    scene.add(prateleira);
+    this.scene.add(prateleira);
   
     // Personagem (em frente ao fogão)
     personagem.position.set(0, 0, -2); // z negativo, olhando para o fogão
     personagem.rotation.y = Math.PI; // virar personagem para frente do fogão
-    scene.add(personagem);
+    this.scene.add(personagem);
   }
   async init() {
     // Criar cubo temporário
