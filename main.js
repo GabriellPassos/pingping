@@ -44,7 +44,7 @@ function loop() {
   const delta = (agora - ultimoFrame) / 1000;
   tempo += delta;
   cenaAtual.update(beta)
-
+ 
   document.getElementById(
     "contador-ritmo"
   ).textContent = `${tempoInterno.toFixed(2)}s`;

@@ -29,7 +29,7 @@ export class Cena_1 {
     );
     const panela = await this.loader.carregarModelo(
       this.scene,
-      "./assets/scene.gltf"
+      "./assets/pan_A.gltf"
     );
     const geladeira = await this.loader.carregarModelo(
       this.scene,
@@ -43,7 +43,10 @@ export class Cena_1 {
       this.scene,
       "./assets/Rogue.glb"
     );
- 
+    const carne = await this.loader.carregarModelo(
+      this.scene,
+      "./assets/food_ingredient_steak.gltf"
+    );
     // ----------------------------
     // Posicionar os objetos
     // ----------------------------
@@ -54,6 +57,8 @@ export class Cena_1 {
     panela.modelo.position.set(0, 2, 0); // 1 unidade acima
     //panela.rotation.x = THREE.MathUtils.degToRad(30); // Inclinação inicial
 
+    carne.modelo.position.set(0, 2.4, 0); // 1 unidade acima
+ 
     // Geladeira (à esquerda, mais para frente)
     geladeira.modelo.position.set(-3, 0, -5); // x negativo, z positivo
 
@@ -64,6 +69,7 @@ export class Cena_1 {
     personagem.modelo.position.set(0, 0, 1.5); // z negativo, olhando para o fogão
     personagem.modelo.rotation.y = Math.PI; // virar personagem para frente do fogão
     this.modelos["panela"] = panela;
+    this.modelos["carne"] = carne;
   }
 
   async init() {
@@ -81,30 +87,34 @@ export class Cena_1 {
     // Tocar animação
     if (this.modelos["panela"]) {
       console.log(this.modelos["panela"].animacoes);
-      if (
-        Object.keys(this.modelos["panela"].animacoes).length > 0
-      ) {
+      if (Object.keys(this.modelos["panela"].animacoes).length > 0) {
         if (!this.modelos["panela"].animacoes["flip"].isRunning()) {
           this.modelos["panela"].animacoes["flip"].reset();
         }
         this.modelos["panela"].animacoes["flip"].setLoop(THREE.LoopOnce);
-        this.modelos["panela"].animacoes["flip"].clampWhenFinished = true; 
+        this.modelos["panela"].animacoes["flip"].clampWhenFinished = true;
         this.modelos["panela"].animacoes["flip"].play();
-
-    
+        if (!this.modelos["carne"].animacoes["flip"].isRunning()) {
+          this.modelos["carne"].animacoes["flip"].reset();
+        }
+        this.modelos["carne"].animacoes["flip"].setLoop(THREE.LoopOnce);
+        this.modelos["carne"].animacoes["flip"].clampWhenFinished = true;
+        this.modelos["carne"].animacoes["flip"].play();
       }
     }
   }
   update() {
     const delta = this.clock.getDelta(); // Atualiza o tempo decorrido
-    
-    if (this.modelos["panela"] && this.modelos["panela"].mixer) {
+
+    Object.values(this.modelos).forEach((modelo) => {
+      modelo?.mixer && modelo.mixer.update(delta);
+    });
+    /*if (this.modelos["panela"] && this.modelos["panela"].mixer) {
       this.modelos["panela"].mixer.update(delta); // Atualiza o mixer da panela
-    }
-  
+    }*/
+
     this.renderer.render(this.scene, this.camera);
   }
-  
 
   onWindowResize() {
     this.camera.aspect = window.innerWidth / window.innerHeight;
