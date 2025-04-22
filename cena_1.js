@@ -84,7 +84,7 @@ export class Cena_1 {
       if (
         Object.keys(this.modelos["panela"].animacoes).length > 0
       ) {
-  
+        this.modelos["panela"].animacoes["flip"].setLoop(THREE.LoopOnce);
         this.modelos["panela"].animacoes["flip"].play();
         
     
