@@ -84,9 +84,13 @@ export class Cena_1 {
       if (
         Object.keys(this.modelos["panela"].animacoes).length > 0
       ) {
+        if (!this.modelos["panela"].animacoes["flip"].isRunning()) {
+          this.modelos["panela"].animacoes["flip"].reset();
+        }
         this.modelos["panela"].animacoes["flip"].setLoop(THREE.LoopOnce);
+        this.modelos["panela"].animacoes["flip"].clampWhenFinished = true; 
         this.modelos["panela"].animacoes["flip"].play();
-        
+
     
       }
     }

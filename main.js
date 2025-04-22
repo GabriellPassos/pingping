@@ -61,6 +61,7 @@ function loop() {
       minimoForcaAcerto
     );
     if (movimentoVertical) {
+      console.log('ste')
       if (tempoInterno < 0.3) {
         aplicarClasseVisual("efeito-acerto-perfeito");
         pontuacao.registrarAcerto('perfeito')
