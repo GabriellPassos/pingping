@@ -74,7 +74,7 @@ function loop() {
         pontuacao.registrarAcerto('fraco')
         tempoInterno = movimentoVertical.tempoTotal;
       }
-
+      cenaAtual.flip();
       betaInicial = beta;
     }
   } else {
@@ -113,6 +113,6 @@ if (window.DeviceOrientationEvent) {
     true
   );
 } else {
-  document.body.innerHTML +=
-    "<p>Seu navegador não suporta o evento DeviceOrientation.</p>";
+ /* document.body.innerHTML +=
+    "<p>Seu navegador não suporta o evento DeviceOrientation.</p>";*/
 }
