@@ -1,0 +1,109 @@
+// GameFlipEngine.js
+
+export const GameFlipEngine = (() => {
+  let pontuacao = 0;
+  let lastFlipTime = 0;
+  let proximaBatida = Date.now() + 2000;
+  const cooldown = 1000;
+  const intervaloBatida = 2000;
+  const toleranciaBatida = 300;
+
+  const ranges = {
+    perfeito: [18, 25],
+    bom: [13, 17.99],
+    medio: [9, 12.99],
+    fraco: [6, 8.99]
+  };
+
+  const listeners = {
+    onFlip: [],
+    onScoreChange: [],
+    onBeat: []
+  };
+
+  // Batida contínua
+  setInterval(() => {
+    proximaBatida = Date.now();
+    listeners.onBeat.forEach((cb) => cb(proximaBatida));
+  }, intervaloBatida);
+
+  function avaliarFlip(z, now) {
+    const distanciaDaBatida = Math.abs(now - proximaBatida);
+    const absZ = Math.abs(z);
+    let resultado = "Movimento fraco demais.";
+    let pontos = 0;
+
+    if (distanciaDaBatida <= toleranciaBatida) {
+      if (absZ >= ranges.perfeito[0]) {
+        resultado = "Flip Perfeito!";
+        pontos = 100;
+      } else if (absZ >= ranges.bom[0]) {
+        resultado = "Flip Bom!";
+        pontos = 70;
+      } else if (absZ >= ranges.medio[0]) {
+        resultado = "Flip Médio.";
+        pontos = 40;
+      } else if (absZ >= ranges.fraco[0]) {
+        resultado = "Flip Fraco.";
+        pontos = 10;
+      }
+
+      if (pontos > 0) {
+        pontuacao += pontos;
+        lastFlipTime = now;
+        listeners.onScoreChange.forEach((cb) => cb(pontuacao));
+      }
+    } else {
+      resultado = "Fora da batida!";
+    }
+
+    listeners.onFlip.forEach((cb) =>
+      cb({
+        z,
+        resultado,
+        pontos,
+        timestamp: now,
+        distanciaDaBatida
+      })
+    );
+  }
+
+  function handleMotion(event) {
+    const z = event.accelerationIncludingGravity.z;
+    const now = Date.now();
+    if (now - lastFlipTime < cooldown) return;
+    avaliarFlip(z, now);
+  }
+
+  return {
+    start() {
+      window.addEventListener("devicemotion", handleMotion);
+    },
+    stop() {
+      window.removeEventListener("devicemotion", handleMotion);
+    },
+    getScore() {
+      return pontuacao;
+    },
+    reset() {
+      pontuacao = 0;
+      lastFlipTime = 0;
+      proximaBatida = Date.now() + intervaloBatida;
+    },
+    simulateFlip(z) {
+      avaliarFlip(z, Date.now());
+    },
+    onFlip(callback) {
+      listeners.onFlip.push(callback);
+    },
+    onScoreChange(callback) {
+      listeners.onScoreChange.push(callback);
+    },
+    onBeat(callback) {
+      listeners.onBeat.push(callback);
+    },
+    getNextBeatTime() {
+      return proximaBatida;
+    }
+  };
+})();
