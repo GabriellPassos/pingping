@@ -7,6 +7,7 @@ export const GameFlipEngine = (() => {
   const cooldown = 1000;
   const intervaloBatida = 2000;
   const toleranciaBatida = 300;
+  const limiarMovimento = 5;
 
   const ranges = {
     perfeito: [18, 25],
@@ -34,7 +35,7 @@ export const GameFlipEngine = (() => {
     const absZ = Math.abs(z);
     let resultado = "Movimento fraco demais.";
     let pontos = 0;
-
+    if (absZ < LIMIAR_MOVIMENTO) return;
     if (distanciaDaBatida <= toleranciaBatida) {
       if (absZ >= ranges.perfeito[0]) {
         resultado = "Flip Perfeito!";
