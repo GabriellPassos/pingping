@@ -1,55 +1,161 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>Leitura do Giroscópio</title>
-    <style>
-      .efeito-acerto-perfeito {
-        background-color: green !important;
-      }
-      .efeito-acerto-medio {
-        background-color: blue !important;
-      }
-      .efeito-acerto-fraco {
-        background-color: yellow !important;
-      }
-      .efeito-default {
-        background-color: red;
-      }
-    </style>
-    <script type="importmap">
-      {
-        "imports": {
-          "three": "https://cdn.jsdelivr.net/npm/three@0.175.0/build/three.module.js",
-          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.175.0/examples/jsm/"
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Flip de Hambúrguer</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      padding: 40px;
+    }
+    .score {
+      font-size: 2rem;
+      margin-bottom: 20px;
+    }
+    .status {
+      font-size: 1.5rem;
+      margin-top: 20px;
+    }
+    .btn-test {
+      margin-top: 30px;
+      padding: 10px 20px;
+      font-size: 1rem;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🍔 Flip de Hambúrguer</h1>
+
+  <div class="score" id="pontuacao">Pontuação: 0</div>
+  <div class="status" id="status">Aguardando primeira batida...</div>
+
+  <button class="btn-test" onclick="GameFlipEngine.simulateFlip(20)">Simular Flip (z=20)</button>
+
+  <script>
+    // Código da engine aqui (ou separado em outro arquivo)
+    const GameFlipEngine = (() => {
+      let pontuacao = 0;
+      let lastFlipTime = 0;
+      let proximaBatida = Date.now() + 2000;
+      const cooldown = 1000;
+      const intervaloBatida = 2000;
+      const toleranciaBatida = 300;
+
+      const ranges = {
+        perfeito: [18, 25],
+        bom: [13, 17.99],
+        medio: [9, 12.99],
+        fraco: [6, 8.99]
+      };
+
+      const listeners = {
+        onFlip: [],
+        onScoreChange: [],
+        onBeat: []
+      };
+
+      setInterval(() => {
+        proximaBatida = Date.now();
+        listeners.onBeat.forEach((cb) => cb(proximaBatida));
+      }, intervaloBatida);
+
+      function handleMotion(event) {
+        const z = event.accelerationIncludingGravity.z;
+        const now = Date.now();
+
+        if (now - lastFlipTime < cooldown) return;
+
+        const distanciaDaBatida = Math.abs(now - proximaBatida);
+        const absZ = Math.abs(z);
+        let resultado = "Movimento fraco demais.";
+        let pontos = 0;
+
+        if (distanciaDaBatida <= toleranciaBatida) {
+          if (absZ >= ranges.perfeito[0]) {
+            resultado = "Flip Perfeito!";
+            pontos = 100;
+          } else if (absZ >= ranges.bom[0]) {
+            resultado = "Flip Bom!";
+            pontos = 70;
+          } else if (absZ >= ranges.medio[0]) {
+            resultado = "Flip Médio.";
+            pontos = 40;
+          } else if (absZ >= ranges.fraco[0]) {
+            resultado = "Flip Fraco.";
+            pontos = 10;
+          }
+
+          if (pontos > 0) {
+            pontuacao += pontos;
+            lastFlipTime = now;
+            listeners.onScoreChange.forEach((cb) => cb(pontuacao));
+          }
+        } else {
+          resultado = "Fora da batida!";
         }
+
+        listeners.onFlip.forEach((cb) =>
+          cb({
+            z,
+            resultado,
+            pontos,
+            timestamp: now,
+            distanciaDaBatida
+          })
+        );
       }
-    </script>
-  </head>
-  <body>
-    <div style="position: absolute; left:0; top:0;">
-    <h1>Valores do Giroscópio</h1>
-    <p>Alpha (Z - Rotação): <span id="alpha">Aguardando...</span></p>
-    <p>
-      Beta (X - Inclinação frente/trás): <span id="beta">Aguardando...</span>
-    </p>
-    <p>Gamma (Y - Inclinação lateral): <span id="gamma">Aguardando...</span></p>
 
-    <div
-      id="efeito-acerto"
-      class="efeito-default"
-      style="height: 20px; width: 80px"
-    ></div>
+      return {
+        start() {
+          window.addEventListener("devicemotion", handleMotion);
+        },
+        stop() {
+          window.removeEventListener("devicemotion", handleMotion);
+        },
+        getScore() {
+          return pontuacao;
+        },
+        reset() {
+          pontuacao = 0;
+          lastFlipTime = 0;
+          proximaBatida = Date.now() + intervaloBatida;
+        },
+        onFlip(callback) {
+          listeners.onFlip.push(callback);
+        },
+        onScoreChange(callback) {
+          listeners.onScoreChange.push(callback);
+        },
+        onBeat(callback) {
+          listeners.onBeat.push(callback);
+        },
+        simulateFlip(zValue) {
+          handleMotion({ accelerationIncludingGravity: { z: zValue } });
+        },
+        getNextBeatTime() {
+          return proximaBatida;
+        }
+      };
+    })();
 
-    <p>Contador: <span id="contador-ritmo">Aguardando...</span></p>
+    // UI callbacks
+    GameFlipEngine.onFlip((data) => {
+      document.getElementById("status").innerText = data.resultado;
+      console.log("Flip detectado:", data);
+    });
 
-    <p id="pontuacao"></p>
-    <p id="combo"></p>
-    <p id="mensagem-combo"></p>
-    <p>
-      Coeficiente de Força: <span id="coeficiente-forca">Aguardando...</span>
-    </p>
-    <p id="mensagem"></p>
-  </div>
-    <script type="module" src="./main.js"></script>
-  </body>
+    GameFlipEngine.onScoreChange((score) => {
+      document.getElementById("pontuacao").innerText = `Pontuação: ${score}`;
+    });
+
+    GameFlipEngine.onBeat(() => {
+      document.getElementById("status").innerText = "🎵 Batida! Flip agora!";
+    });
+
+    GameFlipEngine.start();
+  </script>
+</body>
 </html>
