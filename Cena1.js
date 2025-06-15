@@ -1,8 +1,8 @@
-import * as THREE from "three";
-import { Loader } from "./loader.js";
-import { rotacionarModeloPorBeta } from "./animations.js";
+import * as THREE from "https://unpkg.com/three@0.161.0/build/three.module.js";
+import { Loader } from "./Loader.js";
+import { GameFlipEngine } from "./GameFlipEngine.js";
 
-export class Cena_1 {
+export class Cena1 {
   constructor(renderer) {
     this.scene = new THREE.Scene();
     this.camera = new THREE.PerspectiveCamera(
@@ -21,6 +21,7 @@ export class Cena_1 {
     this.clock = new THREE.Clock();
     this.init();
   }
+  
   async montarCenario() {
     // Carregar modelos
     const fogao = await this.loader.carregarModelo(
@@ -81,6 +82,12 @@ export class Cena_1 {
     luzDirecional.position.set(5, 10, 7.5); // posição da luz
     luzDirecional.castShadow = true; // se quiser sombra depois
     this.scene.add(luzDirecional);
+    const gridHelper = new THREE.GridHelper(10, 10);
+this.scene.add(gridHelper);
+
+const axesHelper = new THREE.AxesHelper(5);
+this.scene.add(axesHelper);
+    GameFlipEngine.onFlip(()=>this.flip())
   }
 
   flip() {
@@ -114,6 +121,7 @@ export class Cena_1 {
     }*/
 
     this.renderer.render(this.scene, this.camera);
+    
   }
 
   onWindowResize() {

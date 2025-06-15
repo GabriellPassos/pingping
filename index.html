@@ -6,6 +6,15 @@
   <div id="contador">Próximo flip em: 2.0s</div>
 
   <button id="simular">Simular Flip (z=20)</button>
+  <div id="three-container" style="width: 100%; height: 300px; margin-top: 30px;"></div>
 
-  <script type="module" src="./main.js"></script>
+  <script type="module" src="./Main.js"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.175.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.175.0/examples/jsm/"
+      }
+    }
+    </script>
 </body>

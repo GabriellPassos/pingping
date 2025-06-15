@@ -49,7 +49,7 @@ export const GameFlipEngine = (() => {
         resultado = "Flip Fraco.";
         pontos = 10;
       }
-
+      
       if (pontos > 0) {
         pontuacao += pontos;
         lastFlipTime = now;

@@ -1,6 +1,7 @@
 import { GameFlipEngine } from './GameFlipEngine.js';
-
-document.addEventListener('DOMContentLoaded', () => {
+import {Cena1} from "./Cena1.js";
+import * as THREE from 'three';
+document.addEventListener('DOMContentLoaded',async () => {
   const pontuacaoEl = document.getElementById("pontuacao");
   const statusEl = document.getElementById("status");
   const simularBtn = document.getElementById("simular");
@@ -29,7 +30,33 @@ document.addEventListener('DOMContentLoaded', () => {
   }, 100);
 
   GameFlipEngine.start();
+
   simularBtn.addEventListener("click", () => {
     GameFlipEngine.simulateFlip(20);
+  });
+
+  //CARREGAR CENA
+    // Cria o renderer
+  const renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  document.body.appendChild(renderer.domElement);
+
+  // Instancia a cena
+  const cena1 = new Cena1(renderer);
+
+  // Aguarda os modelos serem carregados e adicionados
+  await cena1.montarCenario();
+
+  // Loop de animação
+  function loop() {
+    requestAnimationFrame(loop);
+    cena1.update(); // Atualiza animações e renderiza
+  }
+
+  loop();
+
+  // Redimensionamento da janela
+  window.addEventListener('resize', () => {
+    cena1.onWindowResize();
   });
 });
