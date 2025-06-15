@@ -12,21 +12,23 @@ export const GameFlipEngine = (() => {
     perfeito: [18, 25],
     bom: [13, 17.99],
     medio: [9, 12.99],
-    fraco: [6, 8.99]
+    fraco: [6, 8.99],
   };
 
   const listeners = {
     onFlip: [],
     onScoreChange: [],
-    onBeat: []
+    onBeat: [],
   };
 
   // Batida contínua
   setInterval(() => {
-    proximaBatida = Date.now();
+    calcularNovaBatida();
     listeners.onBeat.forEach((cb) => cb(proximaBatida));
   }, intervaloBatida);
-
+  function calcularNovaBatida() {
+    proximaBatida = Date.now() + intervaloBatida;
+  }
   function avaliarFlip(z, now) {
     const distanciaDaBatida = Math.abs(now - proximaBatida);
     const absZ = Math.abs(z);
@@ -63,7 +65,7 @@ export const GameFlipEngine = (() => {
         resultado,
         pontos,
         timestamp: now,
-        distanciaDaBatida
+        distanciaDaBatida,
       })
     );
   }
@@ -104,6 +106,6 @@ export const GameFlipEngine = (() => {
     },
     getNextBeatTime() {
       return proximaBatida;
-    }
+    },
   };
 })();
