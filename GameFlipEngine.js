@@ -91,7 +91,7 @@ export const GameFlipEngine = (() => {
 
     const now = Date.now();
     if (
-      Math.abs(delta) >= LIMIAR_FLIP_ROTACAO &&
+      Math.round(delta) >= LIMIAR_FLIP_ROTACAO &&
       now - lastFlipTime > cooldown
     ) {
       console.log("Flip detectado por rotação!", delta);
