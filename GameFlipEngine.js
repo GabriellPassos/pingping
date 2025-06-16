@@ -35,7 +35,7 @@ export const GameFlipEngine = (() => {
     const absZ = Math.abs(z);
     let resultado = "Movimento fraco demais.";
     let pontos = 0;
-    if (absZ < LIMIAR_MOVIMENTO) return;
+    if (absZ < limiarMovimento) return;
     if (distanciaDaBatida <= toleranciaBatida) {
       if (absZ >= ranges.perfeito[0]) {
         resultado = "Flip Perfeito!";
