@@ -1,5 +1,3 @@
-// GameFlipEngine.js
-
 export const GameFlipEngine = (() => {
   let pontuacao = 0;
   let lastFlipTime = 0;
@@ -7,7 +5,10 @@ export const GameFlipEngine = (() => {
   const cooldown = 1000;
   const intervaloBatida = 2000;
   const toleranciaBatida = 300;
-  const limiarMovimento = .8;
+  const LIMIAR_FLIP_ROTACAO = 0;
+
+  let ultimaBeta = null;
+  let ultimaZRegistrado = 0;
 
   const ranges = {
     perfeito: [18, 25],
@@ -22,21 +23,22 @@ export const GameFlipEngine = (() => {
     onBeat: [],
   };
 
-  // Batida contínua
   setInterval(() => {
     calcularNovaBatida();
     listeners.onBeat.forEach((cb) => cb(proximaBatida));
   }, intervaloBatida);
+
   function calcularNovaBatida() {
     proximaBatida = Date.now() + intervaloBatida;
   }
+
   function avaliarFlip(z, now) {
+    console.log('possui')
     const distanciaDaBatida = Math.abs(now - proximaBatida);
     const absZ = Math.abs(z);
     let resultado = "Movimento fraco demais.";
     let pontos = 0;
-    document.querySelector("#simular").innerHTML = absZ;
-    //if (absZ < limiarMovimento) return;
+
     if (distanciaDaBatida <= toleranciaBatida) {
       if (absZ >= ranges.perfeito[0]) {
         resultado = "Flip Perfeito!";
@@ -51,7 +53,7 @@ export const GameFlipEngine = (() => {
         resultado = "Flip Fraco.";
         pontos = 10;
       }
-      
+
       if (pontos > 0) {
         pontuacao += pontos;
         lastFlipTime = now;
@@ -73,18 +75,39 @@ export const GameFlipEngine = (() => {
   }
 
   function handleMotion(event) {
-    const z = event.accelerationIncludingGravity.z;
+    // Apenas registrar o último Z, sem disparar avaliação aqui
+    ultimaZRegistrado = event.accelerationIncludingGravity.z;
+  }
+
+  function detectarRotacaoFlip(event) {
+    const betaAtual = event.beta;
+
+    if (ultimaBeta === null) {
+      ultimaBeta = betaAtual;
+      return;
+    }
+
+    const delta = betaAtual - ultimaBeta;
+    ultimaBeta = betaAtual;
+
     const now = Date.now();
-    if (now - lastFlipTime < cooldown) return;
-    avaliarFlip(z, now);
+    if (
+      Math.abs(delta) >= LIMIAR_FLIP_ROTACAO &&
+      now - lastFlipTime > cooldown
+    ) {
+      console.log("Flip detectado por rotação!", delta);
+      avaliarFlip(ultimaZRegistrado, now);
+    }
   }
 
   return {
     start() {
       window.addEventListener("devicemotion", handleMotion);
+      window.addEventListener("deviceorientation", detectarRotacaoFlip);
     },
     stop() {
       window.removeEventListener("devicemotion", handleMotion);
+      window.removeEventListener("deviceorientation", detectarRotacaoFlip);
     },
     getScore() {
       return pontuacao;
