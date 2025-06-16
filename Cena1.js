@@ -21,13 +21,14 @@ export class Cena1 {
     this.clock = new THREE.Clock();
     this.init();
   }
-  
+
   async montarCenario() {
     // Carregar modelos
     const fogao = await this.loader.carregarModelo(
       this.scene,
       "./assets/oven.gltf"
     );
+
     const panela = await this.loader.carregarModelo(
       this.scene,
       "./assets/pan_A.gltf"
@@ -52,22 +53,44 @@ export class Cena1 {
     // Posicionar os objetos
     // ----------------------------
     // Fogão
-    fogao.modelo.position.set(0, 0, 0); // Centro da cena
+    fogao.modelo.position.set(0, 0, 1); // Centro da cena
+    const fogao2 = fogao.modelo.clone(true);
+    fogao2.position.set(2, 0, 1);
+    fogao2.rotation.y = -Math.PI;
+    this.scene.add(fogao2);
+    const prateleira2 = prateleira.modelo.clone(true);
+    prateleira2.position.set(-2.5, 1, 1);
+    prateleira2.rotation.y = -Math.PI;
+    this.scene.add(prateleira2);
 
     // Panela (em cima do fogão)
-    panela.modelo.position.set(0, 2, 0); // 1 unidade acima
+    panela.modelo.position.set(0, 2, 1); // 1 unidade acima
     //panela.rotation.x = THREE.MathUtils.degToRad(30); // Inclinação inicial
 
-    carne.modelo.position.set(0, 2.4, 0); // 1 unidade acima
- 
+    carne.modelo.position.set(0, 2.4, 1); // 1 unidade acima
+
     // Geladeira (à esquerda, mais para frente)
     geladeira.modelo.position.set(-3, 0, -5); // x negativo, z positivo
+    const geladeira2 = geladeira.modelo.clone(true);
+    geladeira2.position.set(4.1, 1, -6.3);
+
+    this.scene.add(geladeira2);
+    geladeira2.rotation.x = Math.PI / 2;
+    geladeira2.rotation.y = -Math.PI;
+    const fogao3 = fogao.modelo.clone(true);
+    fogao3.position.set(2.1, 0, -5);
+    fogao3.rotation.y = -Math.PI;
+    this.scene.add(fogao3);
+
+    const fogao4 = fogao.modelo.clone(true);
+    fogao4.position.set(2.1, 2, -5);
+    this.scene.add(fogao4);
 
     // Prateleira (à direita, mais para frente)
-    prateleira.modelo.position.set(2, 0, -5); // x positivo, z positivo, e um pouco mais alto
+    prateleira.modelo.position.set(-0.5, 0, -5); // x positivo, z positivo, e um pouco mais alto
 
     // Personagem (em frente ao fogão)
-    personagem.modelo.position.set(0, 0, 1.5); // z negativo, olhando para o fogão
+    personagem.modelo.position.set(0, 0, 2.8); // z negativo, olhando para o fogão
     personagem.modelo.rotation.y = Math.PI; // virar personagem para frente do fogão
     this.modelos["panela"] = panela;
     this.modelos["carne"] = carne;
@@ -83,11 +106,11 @@ export class Cena1 {
     luzDirecional.castShadow = true; // se quiser sombra depois
     this.scene.add(luzDirecional);
     const gridHelper = new THREE.GridHelper(10, 10);
-this.scene.add(gridHelper);
+    this.scene.add(gridHelper);
 
-const axesHelper = new THREE.AxesHelper(5);
-this.scene.add(axesHelper);
-    GameFlipEngine.onFlip(()=>this.flip())
+    const axesHelper = new THREE.AxesHelper(5);
+    this.scene.add(axesHelper);
+    GameFlipEngine.onFlip(() => this.flip());
   }
 
   flip() {
@@ -121,7 +144,6 @@ this.scene.add(axesHelper);
     }*/
 
     this.renderer.render(this.scene, this.camera);
-    
   }
 
   onWindowResize() {
