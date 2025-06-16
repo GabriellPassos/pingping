@@ -7,7 +7,7 @@ export const GameFlipEngine = (() => {
   const cooldown = 1000;
   const intervaloBatida = 2000;
   const toleranciaBatida = 300;
-  const limiarMovimento = .1;
+  const limiarMovimento = .5;
 
   const ranges = {
     perfeito: [18, 25],
