@@ -5,7 +5,7 @@ export const GameFlipEngine = (() => {
   const cooldown = 1000;
   const intervaloBatida = 2000;
   const toleranciaBatida = 300;
-  const LIMIAR_FLIP_ROTACAO = 1;
+  const LIMIAR_FLIP_ROTACAO = 10;
 
   let ultimaBeta = null;
   let ultimaZRegistrado = 0;
