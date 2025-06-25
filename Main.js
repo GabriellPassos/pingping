@@ -2,8 +2,10 @@ import { GameFlipEngine } from "./GameFlipEngine.js";
 import { Pontuacao } from "./Pontuacao.js";
 import { CookVisualizer } from "./cookVisualizer.js";
 import { Cena1 } from "./Cena1.js";
-import {mostrarMensagemFlutuante} from "./UI.js"
+import { AnimationManager } from "./AnimationManager.js";
+import { mostrarMensagemFlutuante } from "./UI.js";
 import * as THREE from "three";
+import { buscarModelos } from "./ModelosManager.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   const pontuacaoEl = document.getElementById("pontuacao");
@@ -13,9 +15,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   const mensagemPontuacao = document.getElementById("mensagem-acerto");
   let visualizador = null;
   const pontuacao = new Pontuacao({ elementoMensagem: mensagemPontuacao });
+  let manager;
   GameFlipEngine.onFlip((data) => {
     pontuacao.registrarAcerto(data.resultado);
-    mostrarMensagemFlutuante(mensagemPontuacao, data.resultado)
+    mostrarMensagemFlutuante(mensagemPontuacao, data.resultado);
+    manager?.stop("idle")
+    manager?.play("flip");
   });
   GameFlipEngine.onScoreChange((score) => {
     pontuacaoEl.innerText = `Pontuação: ${score}`;
@@ -54,8 +59,16 @@ document.addEventListener("DOMContentLoaded", async () => {
   const cena1 = new Cena1(renderer);
   // Aguarda os modelos serem carregados e adicionados
   await cena1.montarCenario();
+  manager = new AnimationManager({
+    animacoes: { ...cena1.modelos["carne"].animacoes },
+  });
+  console.log(cena1.modelos["carne"].animacoes);
+  manager.play("idle");
+  const modeloComida = buscarModelos(cena1.modelos["carne"].modelo, [
+    "food_ingredient_steak",
+  ]);
   visualizador = new CookVisualizer({
-    modelo: cena1.modelos["carne"].modelo,
+    modelo: modeloComida.modelosEncontrados[0],
     getTempoRestante: () => GameFlipEngine.getTempoRestante(),
     getTempoTotal: () => GameFlipEngine.getTempoIntervalo(),
     corFinal: new THREE.Color(0x3e1f0d), // marrom escuro

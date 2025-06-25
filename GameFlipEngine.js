@@ -29,7 +29,6 @@ export const GameFlipEngine = (() => {
   }, intervaloBatida);
 
   function calcularNovaBatida() {
-    console.log(proximaBatida)
     proximaBatida = Date.now() + intervaloBatida;
   }
 

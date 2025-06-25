@@ -1,7 +1,7 @@
 // Importando GLTFLoader e TextureLoader
-import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.157.0/examples/jsm/loaders/GLTFLoader.js';
-import { TextureLoader } from 'https://cdn.jsdelivr.net/npm/three@0.157.0/build/three.module.js';
-import { AnimationMixer } from 'https://cdn.jsdelivr.net/npm/three@0.157.0/build/three.module.js';
+import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.157.0/examples/jsm/loaders/GLTFLoader.js";
+import { TextureLoader } from "https://cdn.jsdelivr.net/npm/three@0.157.0/build/three.module.js";
+import { AnimationMixer } from "https://cdn.jsdelivr.net/npm/three@0.157.0/build/three.module.js";
 
 export class Loader {
   constructor() {
@@ -21,7 +21,7 @@ export class Loader {
           cena.add(modelo);
 
           let animacoes = {};
-          let mixer = null
+          let mixer = null;
           if (gltf.animations && gltf.animations.length > 0) {
             mixer = new AnimationMixer(modelo);
             gltf.animations.forEach((clip) => {
@@ -34,7 +34,7 @@ export class Loader {
         },
         undefined,
         (error) => {
-          console.error('Erro ao carregar o modelo:', error);
+          console.error("Erro ao carregar o modelo:", error);
           reject(error);
         }
       );
