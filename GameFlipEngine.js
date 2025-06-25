@@ -34,18 +34,24 @@ export const GameFlipEngine = (() => {
   }
 
   function avaliarFlip(z, now) {
-    const distanciaDaBatida = Math.abs(now - proximaBatida);
-    const absZ = Math.abs(z);
-    let resultado = "Movimento fraco demais.";
+  const distanciaDaBatida = Math.abs(now - proximaBatida);
+  const maxTolerancia = toleranciaBatida; // por ex. 300ms
 
-    if (distanciaDaBatida <= toleranciaBatida) {
-      if (absZ >= ranges.perfeito[0]) {
-        resultado = "perfeito";
-      } else if (absZ >= ranges.bom[0]) {
-        resultado = "good";
-      } else if (absZ >= ranges.medio[0]) {
-        resultado = "fraco";
-      } 
+  let resultado = "Fora da batida!";
+  let pontos = 0;
+
+  if (distanciaDaBatida <= maxTolerancia) {
+    const progresso = 1 - (distanciaDaBatida / maxTolerancia); // 1 = perfeito, 0 = na borda
+    pontos = Math.round(progresso * 100);
+
+    if (progresso > 0.8) {
+      resultado = "perfeito";
+    } else if (progresso > 0.4) {
+      resultado = "medio";
+    } else {
+      resultado = "fraco";
+    }
+
 
     } else {
       resultado = "errou";
