@@ -15,8 +15,6 @@ export class Loader {
         caminhoModelo,
         (gltf) => {
           const modelo = gltf.scene;
-          console.log(gltf);
-
           modelo.position.set(0, 0, 0);
           modelo.scale.set(1, 1, 1);
 

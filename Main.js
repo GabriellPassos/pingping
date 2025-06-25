@@ -2,6 +2,7 @@ import { GameFlipEngine } from "./GameFlipEngine.js";
 import { Pontuacao } from "./Pontuacao.js";
 import { CookVisualizer } from "./cookVisualizer.js";
 import { Cena1 } from "./Cena1.js";
+import {mostrarMensagemFlutuante} from "./UI.js"
 import * as THREE from "three";
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -9,11 +10,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   const statusEl = document.getElementById("status");
   const simularBtn = document.getElementById("simular");
   const contadorEl = document.getElementById("contador");
-  const mensagemPontuacao = document.getElementById("mensagem-pontuacao");
-
+  const mensagemPontuacao = document.getElementById("mensagem-acerto");
+  let visualizador = null;
   const pontuacao = new Pontuacao({ elementoMensagem: mensagemPontuacao });
   GameFlipEngine.onFlip((data) => {
     pontuacao.registrarAcerto(data.resultado);
+    mostrarMensagemFlutuante(mensagemPontuacao, data.resultado)
   });
   GameFlipEngine.onScoreChange((score) => {
     pontuacaoEl.innerText = `Pontuação: ${score}`;
@@ -26,6 +28,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   GameFlipEngine.onBeat(() => {
     statusEl.innerText = "🎵 Batida! Flip agora!";
+    visualizador?.reset();
   });
 
   // Atualiza contador a cada 100ms
@@ -51,19 +54,19 @@ document.addEventListener("DOMContentLoaded", async () => {
   const cena1 = new Cena1(renderer);
   // Aguarda os modelos serem carregados e adicionados
   await cena1.montarCenario();
-  const visualizador = new CookVisualizer({
-    modelo: cena1.modelos['carne'],
-    getTempoRestante:GameFlipEngine.getTempoRestante,
-    tempoTotal:GameFlipEngine.proximaBatida,
+  visualizador = new CookVisualizer({
+    modelo: cena1.modelos["carne"].modelo,
+    getTempoRestante: () => GameFlipEngine.getTempoRestante(),
+    getTempoTotal: () => GameFlipEngine.getTempoIntervalo(),
     corFinal: new THREE.Color(0x3e1f0d), // marrom escuro
   });
   GameFlipEngine.start();
 
   // Loop de animação
   function loop() {
-    visualizador.update();
     requestAnimationFrame(loop);
     cena1.update(); // Atualiza animações e renderiza
+    visualizador.update();
   }
 
   loop();

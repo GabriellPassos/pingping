@@ -1,9 +1,9 @@
 export const GameFlipEngine = (() => {
   let pontuacao = 0;
   let lastFlipTime = 0;
-  let proximaBatida = Date.now() + 2000;
   const cooldown = 1000;
   const intervaloBatida = 2000;
+  let proximaBatida = Date.now() + intervaloBatida;
   const toleranciaBatida = 300;
   const LIMIAR_FLIP_ROTACAO = 10;
 
@@ -29,46 +29,32 @@ export const GameFlipEngine = (() => {
   }, intervaloBatida);
 
   function calcularNovaBatida() {
+    console.log(proximaBatida)
     proximaBatida = Date.now() + intervaloBatida;
   }
-  function getTempoRestante() {
-    return Math.max(proximaBatida - Date.now(), 0); // usando GameFlipEngine.getNextBeatTime()
-  }
+
   function avaliarFlip(z, now) {
     const distanciaDaBatida = Math.abs(now - proximaBatida);
     const absZ = Math.abs(z);
     let resultado = "Movimento fraco demais.";
-    let pontos = 0;
 
     if (distanciaDaBatida <= toleranciaBatida) {
       if (absZ >= ranges.perfeito[0]) {
-        resultado = "Flip Perfeito!";
-        pontos = 100;
+        resultado = "perfeito";
       } else if (absZ >= ranges.bom[0]) {
-        resultado = "Flip Bom!";
-        pontos = 70;
+        resultado = "good";
       } else if (absZ >= ranges.medio[0]) {
-        resultado = "Flip Médio.";
-        pontos = 40;
-      } else if (absZ >= ranges.fraco[0]) {
-        resultado = "Flip Fraco.";
-        pontos = 10;
-      }
+        resultado = "fraco";
+      } 
 
-      if (pontos > 0) {
-        pontuacao += pontos;
-        lastFlipTime = now;
-        listeners.onScoreChange.forEach((cb) => cb(pontuacao));
-      }
     } else {
-      resultado = "Fora da batida!";
+      resultado = "errou";
     }
 
     listeners.onFlip.forEach((cb) =>
       cb({
         z,
         resultado,
-        pontos,
         timestamp: now,
         distanciaDaBatida,
       })
@@ -132,6 +118,12 @@ export const GameFlipEngine = (() => {
     },
     getNextBeatTime() {
       return proximaBatida;
+    },
+    getTempoIntervalo(){
+      return intervaloBatida;
+    },
+    getTempoRestante() {
+      return Math.max(this.getNextBeatTime() - Date.now(), 0);
     },
   };
 })();

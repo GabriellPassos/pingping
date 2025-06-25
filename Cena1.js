@@ -116,7 +116,6 @@ export class Cena1 {
   flip() {
     // Tocar animação
     if (this.modelos["panela"]) {
-      console.log(this.modelos["panela"].animacoes);
       if (Object.keys(this.modelos["panela"].animacoes).length > 0) {
         if (!this.modelos["panela"].animacoes["flip"].isRunning()) {
           this.modelos["panela"].animacoes["flip"].reset();

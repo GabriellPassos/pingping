@@ -1,3 +1,5 @@
+import { dicionarioPontuacao } from "./DicionarioPontuacao.js";
+
 export class Pontuacao {
     constructor({ elementoMensagem, elementoPontuacao, elementoCombo }) {
       this.pontuacao = 0;
@@ -17,20 +19,20 @@ export class Pontuacao {
   
       switch (precisao) {
         case "perfeito":
-          pontos = 100;
-          mensagem = "PERFECT!";
+          pontos = dicionarioPontuacao["perfeito"].pontos;
+          mensagem = dicionarioPontuacao["perfeito"].mensagem;
           break;
         case "medio":
-          pontos = 70;
-          mensagem = "GOOD!";
+          pontos = dicionarioPontuacao["medio"].pontos;
+          mensagem = dicionarioPontuacao["medio"].mensagem;
           break;
         case "fraco":
-          pontos = 50;
-          mensagem = "OK!";
+          pontos = dicionarioPontuacao["fraco"].pontos;
+          mensagem = dicionarioPontuacao["fraco"].mensagem;
           break;
         default:
-          pontos = 0;
-          mensagem = "MISS!";
+          pontos = dicionarioPontuacao["errou"].pontos;
+          mensagem = dicionarioPontuacao["errou"].mensagem;
           break;
       }
   
@@ -43,11 +45,12 @@ export class Pontuacao {
         this.multiplicador = 1;
       }
   
-      this._mostrarMensagem(mensagem);
+      //this._mostrarMensagem(mensagem);
       this._atualizarUI();
     }
   
-    _mostrarMensagem(mensagem) {
+   /* _mostrarMensagem(mensagem) {
+      console.log(mensagem)
       if (this.elMensagem) {
         this.elMensagem.textContent = mensagem;
         this.elMensagem.style.opacity = 1;
@@ -55,7 +58,7 @@ export class Pontuacao {
           this.elMensagem.style.opacity = 0;
         }, 100);
       }
-    }
+    }*/
   
     _atualizarUI() {
       if (this.elPontuacao) {

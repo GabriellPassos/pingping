@@ -6,6 +6,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
+    <link rel="stylesheet" href="./UI.css">
     <title>Document</title>
   </head>
   <body>
@@ -20,14 +21,14 @@
     >
       <h1>🍔 Flip de Hambúrguer</h1>
 
-      <div id="pontuacao">Pontuação: 0</div>
-      <div id="status">Aguardando primeira batida...</div>
-      <div id="contador">Próximo flip em: 2.0s</div>
+      <div id="pontuacao" style="background-color: white;">Pontuação: 0</div>
+      <div id="status" style="background-color: white;">Aguardando primeira batida...</div>
+      <div id="contador" style="background-color: white;">Próximo flip em: 2.0s</div>
 
       <button id="simular">Simular Flip (z=20)</button>
     </div>
     <div>
-      <p id="mensagem-acerto"></p>
+      <p id="mensagem-acerto" class="float-message"></p>
     </div>
     <div
       id="three-container"
