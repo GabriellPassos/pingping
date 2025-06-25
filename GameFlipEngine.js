@@ -31,7 +31,9 @@ export const GameFlipEngine = (() => {
   function calcularNovaBatida() {
     proximaBatida = Date.now() + intervaloBatida;
   }
-
+  function getTempoRestante() {
+    return Math.max(proximaBatida - Date.now(), 0); // usando GameFlipEngine.getNextBeatTime()
+  }
   function avaliarFlip(z, now) {
     const distanciaDaBatida = Math.abs(now - proximaBatida);
     const absZ = Math.abs(z);

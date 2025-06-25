@@ -1,34 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Document</title>
-</head>
-<body>
-  <div style="position: absolute; left: 0; top: 0; background-color: white; z-index: 99;">
-    <h1>🍔 Flip de Hambúrguer</h1>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>Document</title>
+  </head>
+  <body>
+    <div
+      style="
+        position: absolute;
+        left: 0;
+        top: 0;
+        background-color: transparent;
+        z-index: 99;
+      "
+    >
+      <h1>🍔 Flip de Hambúrguer</h1>
 
-    <div id="pontuacao">Pontuação: 0</div>
-    <div id="status">Aguardando primeira batida...</div>
-    <div id="contador">Próximo flip em: 2.0s</div>
+      <div id="pontuacao">Pontuação: 0</div>
+      <div id="status">Aguardando primeira batida...</div>
+      <div id="contador">Próximo flip em: 2.0s</div>
 
-    <button id="simular">Simular Flip (z=20)</button>
-  </div>
+      <button id="simular">Simular Flip (z=20)</button>
+    </div>
+    <div>
+      <p id="mensagem-acerto"></p>
+    </div>
+    <div
+      id="three-container"
+      style="
+        width: 100%;
+        height: 300px;
+        margin-top: 30px;
+        position: absolute;
+        left: 0;
+        top: 0;
+      "
+    ></div>
 
-  <div
-    id="three-container"
-    style="width: 100%; height: 300px; margin-top: 30px; position: absolute; left: 0; top: 0;"
-  ></div>
-
-
-  <script type="importmap">
-    {
-      "imports": {
-        "three": "https://cdn.jsdelivr.net/npm/three@0.175.0/build/three.module.js",
-        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.175.0/examples/jsm/"
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.175.0/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.175.0/examples/jsm/"
+        }
       }
-    }
-  </script>
+    </script>
     <script type="module" src="./Main.js"></script>
-</body>
+  </body>
+</html>
